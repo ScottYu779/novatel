@@ -182,6 +182,26 @@ void NovatelNode::run()
   if (!this->getParameters())
     return;
 
+cout << "release_state " << release_state  << endl;
+cout << "min_state" << min_state << endl;
+cout << "team_debug_on_car" << team_debug_on_car << endl;
+cout << "team_debug_min" << team_debug_min << endl;
+cout << "debug_state_min " << debug_state_min  << endl;
+cout << "team_debug_single_gps_device" << team_debug_single_gps_device << endl;
+cout << "team_debug_max" << team_debug_max << endl;
+cout << "solo_debug_on_car" << solo_debug_on_car << endl;
+cout << "solo_debug_min" << solo_debug_min << endl;
+cout << "solo_debug_single_gps_device" << solo_debug_single_gps_device << endl;
+cout << "solo_debug_max" << solo_debug_max << endl;
+cout << "test_catch_track_file" << test_catch_track_file << endl;
+cout << "coding_debug_with_device" << coding_debug_with_device << endl;
+cout << "simulate_nodes_debug" << simulate_nodes_debug << endl;
+cout << "simulate_state_min" << simulate_state_min << endl;
+cout << "simulate_state_max" << simulate_state_max << endl;
+cout << "debug_state_max " << debug_state_max  << endl;
+cout << "max_state " << max_state  << endl;
+
+
   if (ori_track_file_path_ != "")
   {
     get_ori_track_data_for_init_data();
