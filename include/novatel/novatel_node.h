@@ -20,12 +20,13 @@ typedef enum
   real_team_debug = debug_state,
   real_team_debug_single_gps_device,
   simulate_nodes_debug,
+  test_catch_track_file,
   coding_debug,//解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
   max_state = coding_debug,
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = coding_debug;
+int CODE_STATE  = real_team_debug;
 
 
 

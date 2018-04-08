@@ -35,7 +35,7 @@ cpy xxx.gps novatel_ws/devel/lib/novatel/
 ## conf
 ### config the pc
 get the Authentication of comm to usb
-/etc/udev/rules.d/70-tty.rules
+sudo vim  /etc/udev/rules.d/70-tty.rules
 KERNEL=="ttyUSB[0-9]*",MODE=="0666"
 KERNEL=="ttyS[0-9]*",MODE=="0666"
 

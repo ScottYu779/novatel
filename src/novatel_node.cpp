@@ -196,10 +196,13 @@ void NovatelNode::run()
             << "  y_zero: " << Novatel::y_zero << std::endl
             << std::endl;
 
-  if (CODE_STATE >= simulate_nodes_debug)
-    ROS_INFO("debug mode:no connect serial!!!!!!!!!!!!!!!!!!!!!!");
-  else
-    gps_.Connect(port_, baudrate_);
+  if (port_ != "")
+  {
+    if (CODE_STATE >= simulate_nodes_debug)
+      ROS_INFO("debug mode:no connect serial!!!!!!!!!!!!!!!!!!!!!!");
+    else
+      gps_.Connect(port_, baudrate_);
+  }
 
   if (CODE_STATE >= simulate_nodes_debug)
   {
@@ -419,7 +422,7 @@ bool NovatelNode::getParameters()
   nh_.param("exhibition_odom_topic", exhibition_odom_topic_, std::string("/gps_odom_exhibition"));
   ROS_INFO_STREAM(name_ << ": Exhibition Odom Topic: " << exhibition_odom_topic_);
 
-  nh_.param("port", port_, std::string("/dev/ttyUSB0"));
+  nh_.param("port", port_, std::string(""));
   if (port_ != "")
   {
     ROS_INFO_STREAM(name_ << ": serial Port: " << port_);
@@ -430,10 +433,16 @@ bool NovatelNode::getParameters()
 
   //nh_.param("log_commands", log_commands_, std::string("BESTUTMB ONTIME 1.0"));
   nh_.param("log_commands", log_commands_, std::string(""));
-  ROS_INFO_STREAM(name_ << ": Log Commands: " << log_commands_);
+  if (log_commands_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": Log Commands: " << log_commands_);
+  }
 
   nh_.param("configure_port", configure_port_, std::string(""));
-  ROS_INFO_STREAM(name_ << ": Configure port: " << configure_port_);
+  if(configure_port_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": Configure port: " << configure_port_);
+  }
 
   nh_.param("latitude_zero", Novatel::latitude_zero, 0.0);
   if (Novatel::latitude_zero != 0.0)
