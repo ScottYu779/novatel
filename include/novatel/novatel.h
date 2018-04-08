@@ -419,6 +419,8 @@ public: //data
     static bool north;
     static double latitude_zero;
     static double longitude_zero;
+    static int gps_update_hz_;
+
 
 private:
     bool Connect_(std::string port, int baudrate);

@@ -55,22 +55,8 @@
 #include "novatel/novatel.h"
 #include "novatel/novatel_node.h"
 
-// extern double x_zero;
-// extern double y_zero;
-// extern double z_zero;
-// extern int zoneNum;
-// extern bool north;
-
 using namespace novatel;
 using namespace std;
-
-//#define release  0
-//#define team_debug_on_car_rtk_gps release+1
-//#define team_debug_on_car_single_gps_device team_debug_on_car_rtk_gps+1
-//#define team_debug_single_gps_device  team_debug_on_car_single_gps_device+1
-//#define coding_debug_simulate_gps_device  coding_debug_single_gps_device+1
-//#define coding_debug  coding_debug_single_gps_device+1
-
 
 // Logging system message handlers
 void handleInfoMessages(const std::string &msg) { ROS_INFO("%s", msg.c_str()); }
@@ -86,8 +72,6 @@ static double degrees_to_radians = M_PI / 180.0;
 static double degrees_square_to_radians_square = degrees_to_radians * degrees_to_radians;
 
 static double sigma_v = 0.05; // velocity std dev in m/s
-
-int NovatelNode::gps_update_hz_ = 1; //1hz
 
 NovatelNode::NovatelNode() : nh_("~")
 {
@@ -110,9 +94,7 @@ NovatelNode::~NovatelNode()
   this->disconnect();
 }
 
-
 std::string NovatelNode::track_file_output_path_ = "";
-
 
 bool gps_init_data_exhibition_service_cb(gps_msgs::Gps_Init_Data_Ht::Request &req, gps_msgs::Gps_Init_Data_Ht::Response &res)
 {
@@ -121,9 +103,6 @@ bool gps_init_data_exhibition_service_cb(gps_msgs::Gps_Init_Data_Ht::Request &re
 
 int NovatelNode::get_ori_track_data_for_init_data()
 {
-  
-  
-
   std::ifstream ori_track_file(ori_track_file_path_, std::ios::binary);
   //ori_track_file_out("~/out_test.txt", std::ios::app);
 
@@ -145,9 +124,6 @@ int NovatelNode::get_ori_track_data_for_init_data()
 
   // Finished with the file, close it
   ori_track_file.close();
-
-  gps_.ConvertLLaUTM(Novatel::latitude_zero, Novatel::longitude_zero, &Novatel::y_zero, &Novatel::x_zero,
-                     &Novatel::zoneNum, &Novatel::north);
 
   gps_.ReadFromFile(buff, sizeof(buff));
 
@@ -196,7 +172,7 @@ void NovatelNode::send_rest_locate_data_frq_func()
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
 
-      sleep((uint32_t)(1 / (NovatelNode::gps_update_hz_))); //sleep per 1 sec
+      sleep((uint32_t)(1 / (Novatel::gps_update_hz_))); //fucn sleep uinit is: 1 sec
     }
   }
 }
@@ -206,16 +182,13 @@ void NovatelNode::run()
   if (!this->getParameters())
     return;
 
-  get_ori_track_data_for_init_data();
+  if (ori_track_file_path_ != "")
+  {
+    get_ori_track_data_for_init_data();
+  }
 
   this->odom_publisher_ = nh_.advertise<nav_msgs::Odometry>(odom_topic_, 0);
   this->exhibition_odom_publisher_ = nh_.advertise<gps_msgs::Gps_Data_Ht>(exhibition_odom_topic_, 0);
-
-  struct timeval tv;
-  struct timezone tz;
-  gettimeofday(&tv, &tz);
-  //cost 5us
-  
 
   std::cout << "  latitude_zero: " << Novatel::latitude_zero << std::endl
             << "  longitude_zero: " << Novatel::longitude_zero << std::endl
@@ -322,7 +295,6 @@ void NovatelNode::run()
         int baudrate = atoi((current_token++)->c_str());
         std::string rx_mode = *(current_token++);
         std::string tx_mode = *(current_token++);
-
 
         //come2 for rtk receiver
         ROS_INFO_STREAM("Configure com port baud rate and interface mode for " << com_port << ".");
@@ -448,7 +420,10 @@ bool NovatelNode::getParameters()
   ROS_INFO_STREAM(name_ << ": Exhibition Odom Topic: " << exhibition_odom_topic_);
 
   nh_.param("port", port_, std::string("/dev/ttyUSB0"));
-  ROS_INFO_STREAM(name_ << ": Port: " << port_);
+  if (port_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": serial Port: " << port_);
+  }
 
   nh_.param("baudrate", baudrate_, 9600);
   ROS_INFO_STREAM(name_ << ": Baudrate: " << baudrate_);
@@ -461,26 +436,53 @@ bool NovatelNode::getParameters()
   ROS_INFO_STREAM(name_ << ": Configure port: " << configure_port_);
 
   nh_.param("latitude_zero", Novatel::latitude_zero, 0.0);
-  ROS_INFO_STREAM(name_ << ": latitude_zero: " << Novatel::latitude_zero);
+  if (Novatel::latitude_zero != 0.0)
+  {
+    ROS_INFO_STREAM(name_ << ": latitude_zero: " << Novatel::latitude_zero);
+  }
 
   nh_.param("longitude_zero", Novatel::longitude_zero, 0.0);
-  ROS_INFO_STREAM(name_ << ": longitude_zero: " << Novatel::longitude_zero);
+  if (Novatel::longitude_zero != 0.0)
+  {
+    ROS_INFO_STREAM(name_ << ": longitude_zero: " << Novatel::longitude_zero);
+  }
+
+  if ((Novatel::longitude_zero != 0.0) && (Novatel::latitude_zero != 0.0))
+  {
+    cout << "get x_zero and y_zero by longitude_zero and longitude_zero" << endl;
+    gps_.ConvertLLaUTM(Novatel::latitude_zero, Novatel::longitude_zero, &Novatel::y_zero, &Novatel::x_zero,
+                       &Novatel::zoneNum, &Novatel::north);
+  }
 
   nh_.param("height_zero", Novatel::z_zero, 0.0);
-  ROS_INFO_STREAM(name_ << ": height_zero: " << Novatel::z_zero);
+  if (Novatel::z_zero != 0.0)
+  {
+    ROS_INFO_STREAM(name_ << ": height_zero: " << Novatel::z_zero);
+  }
 
-  nh_.param("gps_update_hz", NovatelNode::gps_update_hz_, 10);
-  ROS_INFO_STREAM(name_ << ": gps_update_hz: " << NovatelNode::gps_update_hz_);
-  
-  nh_.param("ori_track_file_path", ori_track_file_path_, std::string("/home/xcmg/track.txt"));
-  ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
+  nh_.param("gps_update_hz", Novatel::gps_update_hz_, 0);
+  if (Novatel::gps_update_hz_ != 0.0)
+  {
+    ROS_INFO_STREAM(name_ << ": gps_update_hz: " << Novatel::gps_update_hz_);
+  }
+
+  nh_.param("ori_track_file_path", ori_track_file_path_, std::string(""));
+  if (ori_track_file_path_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
+  }
 
   nh_.param("track_file_output_path", track_file_output_path_, std::string(""));
-  ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
-  
-  nh_.param("track_file_input_path", track_file_input_path_, std::string("/home/xcmg/test.gps"));
-  ROS_INFO_STREAM(name_ << ": track_file_input_path_: " << track_file_input_path_);
+  if (track_file_output_path_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
+  }
 
+  nh_.param("track_file_input_path", track_file_input_path_, std::string(""));
+  if (track_file_input_path_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": track_file_input_path_: " << track_file_input_path_);
+  }
 
   return true;
 }

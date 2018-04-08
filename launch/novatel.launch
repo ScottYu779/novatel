@@ -19,9 +19,9 @@
     <param name="longitude_zero" value="117.47107777777778 " />
     <param name="height_zero" value="49.7905 " />
     <param name="gps_update_hz" value="10 " />
-		<param name="ori_track_file_path" value="/home/yuhs/workspace/work/working/huituo/proj/waji_proj/task/zhanshi/src/guiji/2018.1.15.GPS" />
-		<param name="track_file_output_path" value="/home/yuhs/workspace/res/temp/track_file_output.txt" />
-		<param name="track_file_input_path" value="/home/yuhs/workspace/res/temp/track_file_output.txt" />
+		<param name="ori_track_file_path" value="" />
+		<param name="track_file_output_path" value="" />
+		<param name="track_file_input_path" value="" />
 
 	</node>
 
