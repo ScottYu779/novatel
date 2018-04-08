@@ -22,7 +22,7 @@ typedef enum
   simulate_nodes_debug,
   test_catch_track_file,
   coding_debug,//解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
-  max_state = coding_debug,
+  max_state = coding_debug,//如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 }Debug_state;//调试节奏是从下往上
 
 
