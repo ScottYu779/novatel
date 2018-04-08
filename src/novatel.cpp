@@ -236,6 +236,19 @@ Novatel::~Novatel()
     Disconnect();
 }
 
+bool Novatel::auto_conf(std::string port, int baudrate)
+{
+    if (serial_port_ == NULL)
+        serial_port_ = new serial::Serial(port, baudrate, serial::Timeout::simpleTimeout(10));
+
+    serial_port_->write("log comconfig\r\n");
+
+    return true;
+}
+
+
+
+
 bool Novatel::Connect(std::string port, int baudrate, bool search)
 {
     bool connected = Connect_(port, baudrate);
@@ -286,6 +299,7 @@ bool Novatel::Connect(std::string port, int baudrate, bool search)
 
     if (connected)
     {
+        //auto_conf();
         // start reading
         StartReading();
         is_connected_ = true;
@@ -323,12 +337,9 @@ bool Novatel::Connect_(std::string port, int baudrate = 115200)
             log_info_(output.str());
         }
 
-        //if (CODE_STATE >= real_team_debug)
-        //{
         cout << "send:unlogall" << endl;
         // stop any incoming data and flush buffers
         serial_port_->write("UNLOGALL\r\n");
-        //}
 
         // wait for data to stop cominig in
         boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
@@ -390,7 +401,9 @@ void Novatel::Disconnect()
     }
 }
 
-bool Novatel::Ping(int num_attempts)
+
+// num_attempts default is 5
+bool Novatel::Ping(int num_attempts) 
 {
     while ((num_attempts--) > 0)
     {
@@ -1360,7 +1373,7 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
             { // 2nd byte ok - add to buffer
                 data_buffer_[buffer_index_++] = message[ii];
             }
-            else if ((message[ii] == NOVATEL_ACK_BYTE_2) && reading_acknowledgement_)
+            else if ((message[ii] == NOVATEL_ACK_BYTE_2) && reading_acknowledgement_)//waiting "<ok"
             {
                 // 2nd byte of acknowledgement
                 buffer_index_ = 2;

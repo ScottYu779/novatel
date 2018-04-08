@@ -6,6 +6,7 @@ This project provides a cross-platform interface for the Novatel OEM4 and OEMV s
 #update log
 2018-03-28 15:11:58 [author]scott yu,[log]init proj for huituo
 2018-03-31 11:59:06 [author]scott yu,[log]增加了调试模式和正常工作模式的区分代码
+2018-04-08 17:50:12 [author]scott yu,[log]增加设备设置自动化功能，设备利用launch里边的配置命令进行配置，可以进行轨迹采集，不需要经过.gps文件即可完成
 
 #usage for user
 ## novatel_node

@@ -31,6 +31,7 @@ typedef enum
 
 
   test_catch_track_file,    //点控，
+  ori_gps_file_convert,
   coding_debug_with_device, //点控，解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug,
     
 
