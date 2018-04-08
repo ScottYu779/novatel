@@ -19,8 +19,8 @@ typedef enum
   debug_state,//调试阶段和非调试阶段的分界线
   real_team_debug = debug_state,
   real_team_debug_single_gps_device,
-  simulate_nodes_debug,
   test_catch_track_file,
+  simulate_nodes_debug,
   coding_debug,//解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
   max_state = coding_debug,//如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 }Debug_state;//调试节奏是从下往上
@@ -111,7 +111,7 @@ protected:
   int pub_init_data_done;
   std::string ori_track_file_path_;
   
-  std::string track_file_input_path_;
+  std::string track_file_input_path_for_test_simulate_;
   bool track_file_channel = false;
 }; // end class NovatelNode
 

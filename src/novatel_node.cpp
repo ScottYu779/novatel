@@ -132,11 +132,11 @@ int NovatelNode::get_ori_track_data_for_init_data()
 
 void NovatelNode::send_rest_locate_data_frq_func()
 {
-  std::ifstream track_file(track_file_input_path_.c_str(), std::ios::binary);
+  std::ifstream track_file(track_file_input_path_for_test_simulate_.c_str(), std::ios::binary);
 
   if (!track_file.is_open())
   {
-    std::cout << "track File " << track_file_input_path_ << " did not open." << std::endl;
+    std::cout << "track File " << track_file_input_path_for_test_simulate_ << " did not open." << std::endl;
   }
 
   std::vector<track_data> track_datas_t;
@@ -485,12 +485,13 @@ bool NovatelNode::getParameters()
   if (track_file_output_path_ != "")
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
+    CODE_STATE = test_catch_track_file; 
   }
 
-  nh_.param("track_file_input_path", track_file_input_path_, std::string(""));
-  if (track_file_input_path_ != "")
+  nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));
+  if (track_file_input_path_for_test_simulate_ != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_input_path_: " << track_file_input_path_);
+    ROS_INFO_STREAM(name_ << ": track_file_input_path_for_test_simulate_: " << track_file_input_path_for_test_simulate_);
   }
 
   return true;
