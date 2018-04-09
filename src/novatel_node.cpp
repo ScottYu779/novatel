@@ -191,7 +191,7 @@ void NovatelNode::run()
 
   this->odom_publisher_ = nh_.advertise<nav_msgs::Odometry>(odom_topic_, 0);
   this->exhibition_odom_publisher_ = nh_.advertise<gps_msgs::Gps_Data_Ht>(exhibition_odom_topic_, 0);
-  this->nav_sat_fix_publisher_ = nh_.advertise<sensor_msgs::NavSatFix>("/gps_fix",0);
+  this->nav_sat_fix_publisher_ = nh_.advertise<sensor_msgs::NavSatFix>("/gps_fix", 0);
 
   std::cout << "  latitude_zero: " << Novatel::latitude_zero << std::endl
             << "  longitude_zero: " << Novatel::longitude_zero << std::endl
@@ -378,6 +378,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
     }
   }
   odom_publisher_.publish(cur_odom_);
+
   //#####################
   struct tm *local_time;
   time_t current_time;
@@ -424,6 +425,14 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   int zoneNum;
   bool north;
 
+  struct tm *local_time;
+  time_t current_time;
+  struct timeval tv;
+  struct timezone tz;
+  time(&current_time);
+  local_time = localtime(&current_time);
+  gettimeofday(&tv, &tz);
+
   gps_.ConvertLLaUTM(ins_pva.latitude, ins_pva.longitude, &northing, &easting, &zoneNum, &north);
 
   sensor_msgs::NavSatFix sat_fix;
@@ -462,6 +471,52 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   cur_odom_.twist.twist.angular.x = ins_pva.roll;
   cur_odom_.twist.twist.angular.y = ins_pva.pitch;
   cur_odom_.twist.twist.angular.z = ins_pva.azimuth;
+
+  gps_data_ht_.heading = sqrt(pow(cur_odom_.twist.twist.angular.x, 2) + pow(cur_odom_.twist.twist.angular.y, 2));
+  gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
+  gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
+  gps_data_ht_.odom.pose.pose.position.y = cur_odom_.pose.pose.position.y - Novatel::y_zero;
+  gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
+  exhibition_odom_publisher_.publish(gps_data_ht_);
+
+  if (CODE_STATE == test_catch_track_file)
+  {
+    static int track_point_cnt = 0;
+
+    std::ofstream track_file_out(NovatelNode::track_file_output_path_.c_str(), ios::app | ios::out);
+    track_file_out.setf(std::ios::fixed, ios::floatfield);
+    //track_file_out.precision(5);
+    if (!track_file_out.is_open())
+    {
+      cout << "open track_file_out:" << track_file_output_path_ << " failed!!!" << endl;
+    }
+    else
+    {
+      track_file_out << setprecision(2)
+                     << track_point_cnt++ << " "
+                     << (easting - Novatel::x_zero) << " "
+                     << (northing - Novatel::y_zero)
+                     << gps_data_ht_.heading << " "
+                     << endl;
+    }
+  }
+  std::cout << "["
+            << local_time->tm_year + 1900 << "-"
+            << local_time->tm_mon + 1 << "-"
+            << local_time->tm_mday << " "
+            << local_time->tm_hour << ":"
+            << local_time->tm_min << ":"
+            << local_time->tm_sec << "."
+            << tv.tv_usec << "]"
+            << ", "
+            << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
+            << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
+            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
+            << " [heading]:" << gps_data_ht_.heading
+            << " [velocity]:" << gps_data_ht_.velocity
+            << " [x_zero]:" << Novatel::x_zero << ","
+            << " [y_zero]:" << Novatel::y_zero << ","
+            << std::endl;
 
   // TODO: add covariance
 
@@ -513,9 +568,8 @@ bool NovatelNode::getParameters()
 {
   name_ = ros::this_node::getName();
 
-  
   //nh_.param("nav_sat_fix_topic", nav_sat_fix_topic_, std::string("/gps_fix"));
-  
+
   nh_.param("odom_topic", odom_topic_, std::string("/gps_odom"));
   ROS_INFO_STREAM(name_ << ": Odom Topic: " << odom_topic_);
 
