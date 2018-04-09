@@ -83,6 +83,8 @@ NovatelNode::NovatelNode() : nh_("~")
   gps_.setLogDebugCallback(handleDebugMessages);
 
   gps_.set_best_utm_position_callback(boost::bind(&NovatelNode::BestUtmHandler, this, _1, _2));
+  gps_.set_best_velocity_callback(boost::bind(&NovatelNode::BestVelocityHandler, this, _1, _2));
+  gps_.set_ins_position_velocity_attitude_callback(boost::bind(&NovatelNode::InsPvaHandler, this, _1, _2));
 
   //ori_track_file_channel = true;
 
@@ -189,6 +191,7 @@ void NovatelNode::run()
 
   this->odom_publisher_ = nh_.advertise<nav_msgs::Odometry>(odom_topic_, 0);
   this->exhibition_odom_publisher_ = nh_.advertise<gps_msgs::Gps_Data_Ht>(exhibition_odom_topic_, 0);
+  this->nav_sat_fix_publisher_ = nh_.advertise<sensor_msgs::NavSatFix>("/gps_fix",0);
 
   std::cout << "  latitude_zero: " << Novatel::latitude_zero << std::endl
             << "  longitude_zero: " << Novatel::longitude_zero << std::endl
@@ -317,6 +320,12 @@ void NovatelNode::run()
 
 } // function
 
+void NovatelNode::BestVelocityHandler(Velocity &vel, double &timestamp)
+{
+  ROS_DEBUG("Received BestVel");
+  cur_velocity_ = vel;
+}
+
 void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
 {
   ROS_DEBUG("Received BestUtm");
@@ -406,6 +415,94 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   //#####################
 }
 
+void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &timestamp)
+{
+  //ROS_INFO("Received inspva.");
+
+  // convert pva position to UTM
+  double northing, easting;
+  int zoneNum;
+  bool north;
+
+  gps_.ConvertLLaUTM(ins_pva.latitude, ins_pva.longitude, &northing, &easting, &zoneNum, &north);
+
+  sensor_msgs::NavSatFix sat_fix;
+  sat_fix.header.stamp = ros::Time::now();
+  sat_fix.header.frame_id = "/odom";
+
+  if (ins_pva.status == INS_SOLUTION_GOOD)
+    sat_fix.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
+  else
+    sat_fix.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+
+  sat_fix.status.service = sensor_msgs::NavSatStatus::SERVICE_GPS;
+
+  sat_fix.latitude = ins_pva.latitude;
+  sat_fix.longitude = ins_pva.longitude;
+  sat_fix.altitude = ins_pva.height;
+
+  sat_fix.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+
+  nav_sat_fix_publisher_.publish(sat_fix);
+
+  nav_msgs::Odometry cur_odom_;
+  cur_odom_.header.stamp = sat_fix.header.stamp;
+  cur_odom_.header.frame_id = "/odom";
+  cur_odom_.pose.pose.position.x = easting;
+  cur_odom_.pose.pose.position.y = northing;
+  cur_odom_.pose.pose.position.z = ins_pva.height;
+  cur_odom_.pose.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(ins_pva.roll * degrees_to_radians,
+                                                                            ins_pva.pitch * degrees_to_radians,
+                                                                            psi2theta(ins_pva.azimuth * degrees_to_radians));
+
+  cur_odom_.twist.twist.linear.x = ins_pva.east_velocity;
+  cur_odom_.twist.twist.linear.y = ins_pva.north_velocity;
+  cur_odom_.twist.twist.linear.z = ins_pva.up_velocity;
+
+  cur_odom_.twist.twist.angular.x = ins_pva.roll;
+  cur_odom_.twist.twist.angular.y = ins_pva.pitch;
+  cur_odom_.twist.twist.angular.z = ins_pva.azimuth;
+
+  // TODO: add covariance
+
+  // see if there is a matching ins covariance message
+  if ((cur_ins_cov_.gps_week == ins_pva.gps_week) && (cur_ins_cov_.gps_millisecs == ins_pva.gps_millisecs))
+  {
+
+    cur_odom_.pose.covariance[0] = cur_ins_cov_.position_covariance[0];
+    cur_odom_.pose.covariance[1] = cur_ins_cov_.position_covariance[1];
+    cur_odom_.pose.covariance[2] = cur_ins_cov_.position_covariance[2];
+    cur_odom_.pose.covariance[6] = cur_ins_cov_.position_covariance[3];
+    cur_odom_.pose.covariance[7] = cur_ins_cov_.position_covariance[4];
+    cur_odom_.pose.covariance[8] = cur_ins_cov_.position_covariance[5];
+    cur_odom_.pose.covariance[12] = cur_ins_cov_.position_covariance[6];
+    cur_odom_.pose.covariance[13] = cur_ins_cov_.position_covariance[7];
+    cur_odom_.pose.covariance[14] = cur_ins_cov_.position_covariance[8];
+
+    cur_odom_.pose.covariance[21] = cur_ins_cov_.attitude_covariance[0] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[22] = cur_ins_cov_.attitude_covariance[1] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[23] = cur_ins_cov_.attitude_covariance[2] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[27] = cur_ins_cov_.attitude_covariance[3] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[28] = cur_ins_cov_.attitude_covariance[4] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[29] = cur_ins_cov_.attitude_covariance[5] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[33] = cur_ins_cov_.attitude_covariance[6] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[34] = cur_ins_cov_.attitude_covariance[7] * degrees_square_to_radians_square;
+    cur_odom_.pose.covariance[35] = cur_ins_cov_.attitude_covariance[8] * degrees_square_to_radians_square;
+
+    cur_odom_.twist.covariance[0] = cur_ins_cov_.velocity_covariance[0];
+    cur_odom_.twist.covariance[1] = cur_ins_cov_.velocity_covariance[1];
+    cur_odom_.twist.covariance[2] = cur_ins_cov_.velocity_covariance[2];
+    cur_odom_.twist.covariance[6] = cur_ins_cov_.velocity_covariance[3];
+    cur_odom_.twist.covariance[7] = cur_ins_cov_.velocity_covariance[4];
+    cur_odom_.twist.covariance[8] = cur_ins_cov_.velocity_covariance[5];
+    cur_odom_.twist.covariance[12] = cur_ins_cov_.velocity_covariance[6];
+    cur_odom_.twist.covariance[13] = cur_ins_cov_.velocity_covariance[7];
+    cur_odom_.twist.covariance[14] = cur_ins_cov_.velocity_covariance[8];
+  }
+
+  odom_publisher_.publish(cur_odom_);
+}
+
 void NovatelNode::SIGINT_handler(int sig)
 { // can be called asynchronously
   ROS_INFO_STREAM("ctrl c");
@@ -416,6 +513,9 @@ bool NovatelNode::getParameters()
 {
   name_ = ros::this_node::getName();
 
+  
+  //nh_.param("nav_sat_fix_topic", nav_sat_fix_topic_, std::string("/gps_fix"));
+  
   nh_.param("odom_topic", odom_topic_, std::string("/gps_odom"));
   ROS_INFO_STREAM(name_ << ": Odom Topic: " << odom_topic_);
 
@@ -439,7 +539,7 @@ bool NovatelNode::getParameters()
   }
 
   nh_.param("configure_port", configure_port_, std::string(""));
-  if(configure_port_ != "")
+  if (configure_port_ != "")
   {
     ROS_INFO_STREAM(name_ << ": Configure port: " << configure_port_);
   }
@@ -485,7 +585,7 @@ bool NovatelNode::getParameters()
   if (track_file_output_path_ != "")
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
-    CODE_STATE = test_catch_track_file; 
+    CODE_STATE = test_catch_track_file;
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));

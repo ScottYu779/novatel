@@ -51,6 +51,8 @@ public:
   inline double theta2psi(double theta) { return M_PI / 2 - theta; }
 
   void BestUtmHandler(UtmPosition &pos, double &timestamp);
+  void BestVelocityHandler(Velocity &vel, double &timestamp);
+  void InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &timestamp);
 
   void run();
 
@@ -79,7 +81,8 @@ protected:
   ros::Publisher odom_publisher_;
   ros::Publisher exhibition_odom_publisher_;
   //ros::Publisher gps_init_data_publisher_;
-  ros::ServiceServer gps_init_data_server_;
+  //ros::ServiceServer gps_init_data_server_;
+  ros::Publisher nav_sat_fix_publisher_;
 
   Novatel gps_; //
 

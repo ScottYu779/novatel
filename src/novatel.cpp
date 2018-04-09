@@ -171,7 +171,7 @@ inline void DefaultBestPositionCallback(Position best_position, double time_stam
             cout << "open fiile fail" << endl;
         }
         else
-            track_file_out << setprecision(2) << track_point_cnt++ << " " << x - Novatel::x_zero << " " << y - Novatel::y_zero << endl;
+            track_file_out << setprecision(2) << track_point_cnt++ << " " << (x - Novatel::x_zero) << " " << (y - Novatel::y_zero) << endl;
 
         if (CODE_STATE == test_catch_track_file)
         {
