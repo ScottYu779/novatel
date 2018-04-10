@@ -15,36 +15,37 @@ using namespace std;
 
 typedef enum
 {
-  release_state = 0,
-  min_state = release_state,
+  release_state_ = 0,
+  min_ = release_state_,
 
-      team_debug_on_car,
-    team_debug_min = team_debug_on_car,//范围控制边界
-  debug_state_min = team_debug_min,//调试阶段和非调试阶段的分界线
-      team_debug_single_gps_device,
-    team_debug_max = team_debug_single_gps_device,//范围控制边界
+      team_debug_on_car_,
+    team_debug_min_ = team_debug_on_car_,//范围控制边界
+  debug_min_ = team_debug_min_,//范围控制边界
+      team_debug_single_rtk_,
+      team_debug_single_gps_device_,
+    team_debug_max_ = team_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
+                                                      //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 
-      solo_debug_on_car,
-    solo_debug_min = solo_debug_on_car,//范围控制边界
-      solo_debug_single_gps_device,
-    solo_debug_max = solo_debug_single_gps_device,//范围控制边界
+      solo_debug_on_car_,
+    solo_debug_min_ = solo_debug_on_car_,//范围控制边界
+      solo_debug_rtk_,
+      solo_debug_single_gps_device_,
+    solo_debug_max_ = solo_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
+                                                      //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 
-
-  test_catch_track_file,    //点控，
-  ori_gps_file_convert,
-  coding_debug_with_device, //点控，解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug,
+  test_catch_track_file_,     //特殊测试状态
+  ori_gps_file_convert_,      //特殊测试状态
     
-
-      simulate_nodes_debug,                 //不连接设备的调试
-    simulate_state_min = simulate_nodes_debug,//范围控制边界
-    simulate_state_max = simulate_nodes_debug,//范围控制边界
-  debug_state_max = simulate_state_max,//调试阶段和非调试阶段的分界线
+      simulate_nodes_debug_,                 //不连接设备的调试
+    simulate_debug_min_ = simulate_nodes_debug_,//范围控制边界
+    simulate_debug_max_ = simulate_nodes_debug_,//范围控制边界
+  debug_max_ = simulate_debug_max_,//调试阶段和非调试阶段的分界线
   
-  max_state = debug_state_max,//如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
+  max_ = debug_max_,
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = solo_debug_single_gps_device;
+int CODE_STATE  = solo_debug_single_gps_device_;
 
 
 

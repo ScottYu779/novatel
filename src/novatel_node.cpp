@@ -183,7 +183,7 @@ void NovatelNode::run()
   if (!this->getParameters())
     return;
 
-  if (CODE_STATE == ori_gps_file_convert)
+  if (CODE_STATE == ori_gps_file_convert_)
   {
     get_ori_track_data_for_init_data();
   }
@@ -200,12 +200,12 @@ void NovatelNode::run()
 
   if (port_ != "")
   {
-    if ((simulate_state_min <= CODE_STATE) && (CODE_STATE <= simulate_state_max))
+    if ((simulate_debug_min_ <= CODE_STATE) && (CODE_STATE <= simulate_debug_max_))
       ROS_INFO("debug mode:no connect serial!!!!!!!!!!!!!!!!!!!!!!");
     else
       gps_.Connect(port_, baudrate_);
 
-    if ((simulate_state_min <= CODE_STATE) && (CODE_STATE <= simulate_state_max))
+    if ((simulate_debug_min_ <= CODE_STATE) && (CODE_STATE <= simulate_debug_max_))
     {
       ROS_INFO("debug mode:no config novatel!!!!!!!!!!!!!!!!!!!!!!");
 
@@ -481,7 +481,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
-  if (CODE_STATE == test_catch_track_file)
+  if (CODE_STATE == test_catch_track_file_)
   {
     static int track_point_cnt = 0;
 
@@ -634,7 +634,7 @@ bool NovatelNode::getParameters()
   nh_.param("ori_track_file_path", ori_track_file_path_, std::string(""));
   if (ori_track_file_path_ != "")
   {
-    CODE_STATE = ori_gps_file_convert;
+    CODE_STATE = ori_gps_file_convert_;
     ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
   }
 
@@ -642,7 +642,7 @@ bool NovatelNode::getParameters()
   if (track_file_output_path_ != "")
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
-    CODE_STATE = test_catch_track_file;
+    CODE_STATE = test_catch_track_file_;
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));

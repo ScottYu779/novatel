@@ -173,7 +173,7 @@ inline void DefaultBestPositionCallback(Position best_position, double time_stam
         else
             track_file_out << setprecision(2) << track_point_cnt++ << " " << (x - Novatel::x_zero) << " " << (y - Novatel::y_zero) << endl;
 
-        if (CODE_STATE == test_catch_track_file)
+        if (CODE_STATE == test_catch_track_file_)
         {
             std::cout << local_time->tm_year + 1900 << "-"
                       << local_time->tm_mon + 1 << "-"
@@ -368,9 +368,8 @@ bool Novatel::Connect_(std::string port, int baudrate = 115200)
     }
 
     // serial_port_->write("log bestutmb ontime 1\r\n");
-    // cout << "send:log bestutmb ontime 1 " << CODE_STATE << endl;
-    // //serial_port_->write("log bestposb ontime 1\r\n");
-    // //serial_port_->write("log inspvasb ontime 1\r\n");
+    // serial_port_->write("log bestposb ontime 1\r\n");
+    // serial_port_->write("log inspvasb ontime 1\r\n");
 
     return true;
 }
@@ -1315,7 +1314,7 @@ void Novatel::ReadSerialPort()
 
         //std::cout << read_timestamp_ <<  "  bytes: " << len << std::endl;
         // add data to the buffer to be parsed
-        if (CODE_STATE == coding_debug_with_device)
+        if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
         {
             log_info_("income data");
         }
@@ -1469,7 +1468,7 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
             // BINARY_LOG_TYPE message_id = (BINARY_LOG_TYPE) (((data_buffer_[5]) << 8) + data_buffer_[4]);
             // log_info_("Sending to ParseBinary");
             //buffer_index_ = header_length_ + ((data_buffer_[9] << 8) + data_buffer_[8]) + 4
-            if (CODE_STATE == coding_debug_with_device)
+            if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
             {
                 log_info_("ready to parse");
                 // cout << sizeof(data_buffer_);
@@ -1505,7 +1504,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     //log_debug_(output.str());
     uint16_t payload_length;
     uint16_t header_length;
-    if (CODE_STATE == coding_debug_with_device)
+    if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
     {
         cout << "msg id is:" << message_id << endl;
     }
@@ -1528,7 +1527,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     case BESTPOSB_LOG_TYPE:
         Position best_pos;
         memcpy(&best_pos, message, sizeof(best_pos));
-        if (CODE_STATE == coding_debug_with_device)
+        if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
         {
             log_info_("best pose data ok");
         }
@@ -1538,7 +1537,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     case BESTUTMB_LOG_TYPE:
         UtmPosition best_utm;
         memcpy(&best_utm, message, sizeof(best_utm));
-        if (CODE_STATE == coding_debug_with_device)
+        if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
         {
             log_info_("best utm data ok");
         }
