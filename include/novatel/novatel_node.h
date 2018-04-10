@@ -16,17 +16,35 @@ using namespace std;
 typedef enum
 {
   release_state = 0,
-  debug_state,//调试阶段和非调试阶段的分界线
-  real_team_debug = debug_state,
-  real_team_debug_single_gps_device,
-  test_catch_track_file,
-  simulate_nodes_debug,
-  coding_debug,//解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
-  max_state = coding_debug,//如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
+  min_state = release_state,
+
+      team_debug_on_car,
+    team_debug_min = team_debug_on_car,//范围控制边界
+  debug_state_min = team_debug_min,//调试阶段和非调试阶段的分界线
+      team_debug_single_gps_device,
+    team_debug_max = team_debug_single_gps_device,//范围控制边界
+
+      solo_debug_on_car,
+    solo_debug_min = solo_debug_on_car,//范围控制边界
+      solo_debug_single_gps_device,
+    solo_debug_max = solo_debug_single_gps_device,//范围控制边界
+
+
+  test_catch_track_file,    //点控，
+  ori_gps_file_convert,
+  coding_debug_with_device, //点控，解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug,
+    
+
+      simulate_nodes_debug,                 //不连接设备的调试
+    simulate_state_min = simulate_nodes_debug,//范围控制边界
+    simulate_state_max = simulate_nodes_debug,//范围控制边界
+  debug_state_max = simulate_state_max,//调试阶段和非调试阶段的分界线
+  
+  max_state = debug_state_max,//如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = real_team_debug;
+int CODE_STATE  = solo_debug_single_gps_device;
 
 
 

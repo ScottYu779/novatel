@@ -135,6 +135,9 @@ class Novatel
 	 */
     bool Connect(std::string port, int baudrate = 115200, bool search = true);
 
+
+    bool auto_conf(std::string port, int baudrate);
+
     /*!
     * Disconnects from the serial port
     */

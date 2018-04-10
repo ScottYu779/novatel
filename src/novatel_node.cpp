@@ -106,7 +106,6 @@ bool gps_init_data_exhibition_service_cb(gps_msgs::Gps_Init_Data_Ht::Request &re
 int NovatelNode::get_ori_track_data_for_init_data()
 {
   std::ifstream ori_track_file(ori_track_file_path_, std::ios::binary);
-  //ori_track_file_out("~/out_test.txt", std::ios::app);
 
   if (!ori_track_file.is_open())
   {
@@ -184,7 +183,7 @@ void NovatelNode::run()
   if (!this->getParameters())
     return;
 
-  if (ori_track_file_path_ != "")
+  if (CODE_STATE == ori_gps_file_convert)
   {
     get_ori_track_data_for_init_data();
   }
@@ -201,121 +200,124 @@ void NovatelNode::run()
 
   if (port_ != "")
   {
-    if (CODE_STATE >= simulate_nodes_debug)
+    if ((simulate_state_min <= CODE_STATE) && (CODE_STATE <= simulate_state_max))
       ROS_INFO("debug mode:no connect serial!!!!!!!!!!!!!!!!!!!!!!");
     else
       gps_.Connect(port_, baudrate_);
-  }
 
-  if (CODE_STATE >= simulate_nodes_debug)
-  {
-    ROS_INFO("debug mode:no config novatel!!!!!!!!!!!!!!!!!!!!!!");
-  }
-  else
-  {
-    // configure default log sets
-    if (gps_default_logs_period_ > 0)
+    if ((simulate_state_min <= CODE_STATE) && (CODE_STATE <= simulate_state_max))
     {
-      // request default set of gps logs at given rate
-      // convert rate to string
-      ROS_INFO("Requesting default GPS messages: BESTUTMB, BESTVELB");
-      std::stringstream default_logs;
-      default_logs.precision(2);
-      default_logs << "BESTUTMB ONTIME " << std::fixed << gps_default_logs_period_ << ";";
-      default_logs << "BESTVELB ONTIME " << std::fixed << gps_default_logs_period_;
-      gps_.ConfigureLogs(default_logs.str());
+      ROS_INFO("debug mode:no config novatel!!!!!!!!!!!!!!!!!!!!!!");
+
+      boost::shared_ptr<boost::thread> read_thread_ptr_ =
+          boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&NovatelNode::send_rest_locate_data_frq_func, this)));
+    
     }
-
-    if (span_default_logs_period_ > 0)
+    else
     {
-      ROS_INFO("Requesting default SPAN messages: INSPVAB, INSCOVB");
-      // request default set of gps logs at given rate
-      // convert rate to string
-      std::stringstream default_logs;
-      default_logs.precision(2);
-      default_logs << "INSPVAB ONTIME " << std::fixed << span_default_logs_period_ << ";";
-      default_logs << "INSCOVB ONTIME " << std::fixed << span_default_logs_period_;
-      //ROS_INFO_STREAM("default logs: " << default_logs);
-      gps_.ConfigureLogs(default_logs.str());
-    }
-
-    if (!ephem_log_.empty())
-    {
-      std::stringstream default_logs;
-      default_logs << "GPSEPHEMB " << std::fixed << ephem_log_;
-      gps_.ConfigureLogs(default_logs.str());
-    }
-
-    if (range_default_logs_period_ > 0)
-    {
-      std::stringstream default_logs;
-      default_logs.precision(2);
-      default_logs << "RANGECMPB ONTIME " << std::fixed << range_default_logs_period_ << ";";
-      gps_.ConfigureLogs(default_logs.str());
-    }
-
-    if (psrpos_default_logs_period_ > 0)
-    {
-      std::stringstream default_logs;
-      default_logs.precision(2);
-      default_logs << "PSRPOSB ONTIME " << std::fixed << psrpos_default_logs_period_ << ";";
-      gps_.ConfigureLogs(default_logs.str());
-    }
-
-    // configure additional logs
-    //把在launch中设置的需要往惯导里边配置的log 命令 往惯导设置
-    //config all the cmd setted in launch file
-    if (log_commands_ != "")
-    {
-      gps_.ConfigureLogs(log_commands_);
-    }
-
-    // configure serial port (for rtk generally)
-    if (configure_port_ != "")
-    {
-      // string should contain com_port,baud_rate,rx_mode,tx_mode
-      // parse message body by tokening on ","
-      //tokenize:切分词
-      typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
-      boost::char_separator<char> sep(",");
-      tokenizer tokens(configure_port_, sep);
-      // set up iterator to go through token list
-      tokenizer::iterator current_token = tokens.begin();
-      std::string num_comps_string = *(current_token);
-      //int number_components = atoi(num_comps_string.c_str());
-      // make sure the correct number of tokens were found
-      int token_count = 0;
-      for (current_token = tokens.begin(); current_token != tokens.end(); ++current_token)
+      // configure default log sets
+      if (gps_default_logs_period_ > 0)
       {
-        token_count++;
+        // request default set of gps logs at given rate
+        // convert rate to string
+        ROS_INFO("Requesting default GPS messages: BESTUTMB, BESTVELB");
+        std::stringstream default_logs;
+        default_logs.precision(2);
+        default_logs << "BESTUTMB ONTIME " << std::fixed << gps_default_logs_period_ << ";";
+        default_logs << "BESTVELB ONTIME " << std::fixed << gps_default_logs_period_;
+        gps_.ConfigureLogs(default_logs.str());
       }
 
-      if (token_count != 4)
+      if (span_default_logs_period_ > 0)
       {
-        ROS_ERROR_STREAM("Incorrect number of tokens in configure port parameter: " << configure_port_);
+        ROS_INFO("Requesting default SPAN messages: INSPVAB, INSCOVB");
+        // request default set of gps logs at given rate
+        // convert rate to string
+        std::stringstream default_logs;
+        default_logs.precision(2);
+        default_logs << "INSPVAB ONTIME " << std::fixed << span_default_logs_period_ << ";";
+        default_logs << "INSCOVB ONTIME " << std::fixed << span_default_logs_period_;
+        //ROS_INFO_STREAM("default logs: " << default_logs);
+        gps_.ConfigureLogs(default_logs.str());
       }
-      else
-      {
-        current_token = tokens.begin();
-        std::string com_port = *(current_token++);
-        int baudrate = atoi((current_token++)->c_str());
-        std::string rx_mode = *(current_token++);
-        std::string tx_mode = *(current_token++);
 
-        //come2 for rtk receiver
-        ROS_INFO_STREAM("Configure com port baud rate and interface mode for " << com_port << ".");
-        gps_.ConfigureInterfaceMode(com_port, rx_mode, tx_mode);
-        gps_.ConfigureBaudRate(com_port, baudrate);
+      if (!ephem_log_.empty())
+      {
+        std::stringstream default_logs;
+        default_logs << "GPSEPHEMB " << std::fixed << ephem_log_;
+        gps_.ConfigureLogs(default_logs.str());
+      }
+
+      if (range_default_logs_period_ > 0)
+      {
+        std::stringstream default_logs;
+        default_logs.precision(2);
+        default_logs << "RANGECMPB ONTIME " << std::fixed << range_default_logs_period_ << ";";
+        gps_.ConfigureLogs(default_logs.str());
+      }
+
+      if (psrpos_default_logs_period_ > 0)
+      {
+        std::stringstream default_logs;
+        default_logs.precision(2);
+        default_logs << "PSRPOSB ONTIME " << std::fixed << psrpos_default_logs_period_ << ";";
+        gps_.ConfigureLogs(default_logs.str());
+      }
+
+      // configure additional logs
+      //把在launch中设置的需要往惯导里边配置的log 命令 往惯导设置
+      //config all the cmd setted in launch file
+      if (log_commands_ != "")
+      {
+        gps_.ConfigureLogs(log_commands_);
+      }
+
+      // configure serial port (for rtk generally)
+      if (configure_port_ != "")
+      {
+        // string should contain com_port,baud_rate,rx_mode,tx_mode
+        // parse message body by tokening on ","
+        //tokenize:切分词
+        typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+        boost::char_separator<char> sep(",");
+        tokenizer tokens(configure_port_, sep);
+        // set up iterator to go through token list
+        tokenizer::iterator current_token = tokens.begin();
+        std::string num_comps_string = *(current_token);
+        //int number_components = atoi(num_comps_string.c_str());
+        // make sure the correct number of tokens were found
+        int token_count = 0;
+        for (current_token = tokens.begin(); current_token != tokens.end(); ++current_token)
+        {
+          token_count++;
+        }
+
+        if (token_count != 4)
+        {
+          ROS_ERROR_STREAM("Incorrect number of tokens in configure port parameter: " << configure_port_);
+        }
+        else
+        {
+          current_token = tokens.begin();
+          std::string com_port = *(current_token++);
+          int baudrate = atoi((current_token++)->c_str());
+          std::string rx_mode = *(current_token++);
+          std::string tx_mode = *(current_token++);
+
+          //come2 for rtk receiver
+          ROS_INFO_STREAM("Configure com port baud rate and interface mode for " << com_port << ".");
+          gps_.ConfigureInterfaceMode(com_port, rx_mode, tx_mode);
+          gps_.ConfigureBaudRate(com_port, baudrate);
+        }
       }
     }
-  }
 
-  if (CODE_STATE >= simulate_nodes_debug)
+    
+  }
   {
-    boost::shared_ptr<boost::thread> read_thread_ptr_ =
-        boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&NovatelNode::send_rest_locate_data_frq_func, this)));
-  }
+    ROS_INFO("port is null!!!!!!!! ");
 
+  }
   ros::spin(); //programe will hang up here
 
 } // function
@@ -632,6 +634,7 @@ bool NovatelNode::getParameters()
   nh_.param("ori_track_file_path", ori_track_file_path_, std::string(""));
   if (ori_track_file_path_ != "")
   {
+    CODE_STATE = ori_gps_file_convert;
     ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
   }
 

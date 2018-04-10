@@ -236,6 +236,19 @@ Novatel::~Novatel()
     Disconnect();
 }
 
+bool Novatel::auto_conf(std::string port, int baudrate)
+{
+    if (serial_port_ == NULL)
+        serial_port_ = new serial::Serial(port, baudrate, serial::Timeout::simpleTimeout(10));
+
+    serial_port_->write("log comconfig\r\n");
+
+    return true;
+}
+
+
+
+
 bool Novatel::Connect(std::string port, int baudrate, bool search)
 {
     bool connected = Connect_(port, baudrate);
@@ -286,6 +299,7 @@ bool Novatel::Connect(std::string port, int baudrate, bool search)
 
     if (connected)
     {
+        //auto_conf();
         // start reading
         StartReading();
         is_connected_ = true;
@@ -323,12 +337,9 @@ bool Novatel::Connect_(std::string port, int baudrate = 115200)
             log_info_(output.str());
         }
 
-        //if (CODE_STATE >= real_team_debug)
-        //{
         cout << "send:unlogall" << endl;
         // stop any incoming data and flush buffers
         serial_port_->write("UNLOGALL\r\n");
-        //}
 
         // wait for data to stop cominig in
         boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
@@ -390,7 +401,9 @@ void Novatel::Disconnect()
     }
 }
 
-bool Novatel::Ping(int num_attempts)
+
+// num_attempts default is 5
+bool Novatel::Ping(int num_attempts) 
 {
     while ((num_attempts--) > 0)
     {
@@ -1302,7 +1315,7 @@ void Novatel::ReadSerialPort()
 
         //std::cout << read_timestamp_ <<  "  bytes: " << len << std::endl;
         // add data to the buffer to be parsed
-        if (CODE_STATE >= coding_debug)
+        if (CODE_STATE == coding_debug_with_device)
         {
             log_info_("income data");
         }
@@ -1360,7 +1373,7 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
             { // 2nd byte ok - add to buffer
                 data_buffer_[buffer_index_++] = message[ii];
             }
-            else if ((message[ii] == NOVATEL_ACK_BYTE_2) && reading_acknowledgement_)
+            else if ((message[ii] == NOVATEL_ACK_BYTE_2) && reading_acknowledgement_)//waiting "<ok"
             {
                 // 2nd byte of acknowledgement
                 buffer_index_ = 2;
@@ -1456,7 +1469,7 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
             // BINARY_LOG_TYPE message_id = (BINARY_LOG_TYPE) (((data_buffer_[5]) << 8) + data_buffer_[4]);
             // log_info_("Sending to ParseBinary");
             //buffer_index_ = header_length_ + ((data_buffer_[9] << 8) + data_buffer_[8]) + 4
-            if (CODE_STATE >= coding_debug)
+            if (CODE_STATE == coding_debug_with_device)
             {
                 log_info_("ready to parse");
                 // cout << sizeof(data_buffer_);
@@ -1492,7 +1505,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     //log_debug_(output.str());
     uint16_t payload_length;
     uint16_t header_length;
-    if (CODE_STATE >= coding_debug)
+    if (CODE_STATE == coding_debug_with_device)
     {
         cout << "msg id is:" << message_id << endl;
     }
@@ -1515,7 +1528,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     case BESTPOSB_LOG_TYPE:
         Position best_pos;
         memcpy(&best_pos, message, sizeof(best_pos));
-        if (CODE_STATE >= coding_debug)
+        if (CODE_STATE == coding_debug_with_device)
         {
             log_info_("best pose data ok");
         }
@@ -1525,7 +1538,7 @@ void Novatel::ParseBinary(unsigned char *message, size_t length, BINARY_LOG_TYPE
     case BESTUTMB_LOG_TYPE:
         UtmPosition best_utm;
         memcpy(&best_utm, message, sizeof(best_utm));
-        if (CODE_STATE >= coding_debug)
+        if (CODE_STATE == coding_debug_with_device)
         {
             log_info_("best utm data ok");
         }
