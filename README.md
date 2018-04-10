@@ -42,6 +42,16 @@ KERNEL=="ttyS[0-9]*",MODE=="0666"
 
 ##info about novatel protocol
 
+## minicom使用
+sudo minicom
+ctrl-a o 设置
+ctrl-a z e 打开下发命令回显
+ctrl-a q 退出
+
+如果下面不停的上传命令，下发方法
+中键拷贝命令然后迅速回车即可
+
+
 ### 总体规则：
 	不区分大消息
 	那个命令里边 有的是 log psrposa ontime 1 有的是 log psrposb ontime 1
@@ -69,6 +79,17 @@ log com1 inspvasb ontime 0.01
 log com1 imratepvab onnew
 log insposb ontime 1
 saveconfig
+
+
+com com2 115200 n 8 1 n off n
+interfacemode com2 rtca none off
+log inspvaa ontime 1
+log inspvab ontime 1
+log version
+unlogall
+
+
+
 #####命令集合详细解释
 freset
 	恢复到出厂设置
