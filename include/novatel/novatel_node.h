@@ -2,9 +2,9 @@
 #define _NOVATEL_NODE_H
 #include <ros/ros.h>
 
-#include "gps_msgs/Ephemeris.h"
-#include "gps_msgs/L1L2Range.h"
-#include "gps_msgs/Gps_Data_Ht.h"
+#include "msgs_ht/Ephemeris.h"
+#include "msgs_ht/L1L2Range.h"
+#include "msgs_ht/Gps_Data_Ht.h"
 #include "novatel/novatel.h"
 //#include "novatel/novatel_structures.h"
 
@@ -122,14 +122,14 @@ protected:
   double poll_rate_;
 
   Velocity cur_velocity_;
-  gps_msgs::Ephemeris cur_ephem_;
-  gps_msgs::L1L2Range cur_range_;
+  msgs_ht::Ephemeris cur_ephem_;
+  msgs_ht::L1L2Range cur_range_;
   InsCovariance cur_ins_cov_;
   Position cur_psrpos_;
   UtmPosition cur_utm_bestpos_;
 
-  gps_msgs::Gps_Data_Ht gps_data_ht_;
-  //gps_msgs::Gps_Init_Data_Ht gps_init_data_ht_;
+  msgs_ht::Gps_Data_Ht gps_data_ht_;
+  //msgs_ht::Gps_Init_Data_Ht gps_init_data_ht_;
   int pub_init_data_done;
   std::string ori_track_file_path_;
   

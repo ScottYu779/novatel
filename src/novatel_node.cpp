@@ -44,10 +44,10 @@
 #endif
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/NavSatFix.h"
-#include "gps_msgs/Ephemeris.h"
-#include "gps_msgs/L1L2Range.h"
-#include "gps_msgs/Gps_Data_Ht.h"
-#include "gps_msgs/Gps_Init_Data_Ht.h"
+#include "msgs_ht/Ephemeris.h"
+#include "msgs_ht/L1L2Range.h"
+#include "msgs_ht/Gps_Data_Ht.h"
+#include "msgs_ht/Gps_Init_Data_Ht.h"
 
 #include <boost/tokenizer.hpp>
 #include <boost/thread/thread.hpp>
@@ -98,7 +98,7 @@ NovatelNode::~NovatelNode()
 
 std::string NovatelNode::track_file_output_path_ = "";
 
-bool gps_init_data_exhibition_service_cb(gps_msgs::Gps_Init_Data_Ht::Request &req, gps_msgs::Gps_Init_Data_Ht::Response &res)
+bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
 {
   return 0;
 }
@@ -189,7 +189,7 @@ void NovatelNode::run()
   }
 
   this->odom_publisher_ = nh_.advertise<nav_msgs::Odometry>(odom_topic_, 0);
-  this->exhibition_odom_publisher_ = nh_.advertise<gps_msgs::Gps_Data_Ht>(exhibition_odom_topic_, 0);
+  this->exhibition_odom_publisher_ = nh_.advertise<msgs_ht::Gps_Data_Ht>(exhibition_odom_topic_, 0);
   this->nav_sat_fix_publisher_ = nh_.advertise<sensor_msgs::NavSatFix>("/gps_fix", 0);
 
   std::cout << "  latitude_zero: " << Novatel::latitude_zero << std::endl

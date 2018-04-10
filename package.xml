@@ -51,8 +51,8 @@
   <!-- build_depend>roscpp</build_depend -->  
   <run_depend>tf</run_depend>
   <build_depend>tf</build_depend>
-  <run_depend>gps_msgs</run_depend>
-  <build_depend>gps_msgs</build_depend>
+  <run_depend>msgs_ht</run_depend>
+  <build_depend>msgs_ht</build_depend>
   <run_depend>sensor_msgs</run_depend>
   <build_depend>sensor_msgs</build_depend> 
   <run_depend>nav_msgs</run_depend>

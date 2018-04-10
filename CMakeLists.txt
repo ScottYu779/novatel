@@ -31,7 +31,7 @@ if (BUILD_WITH_ROS)
 	## is used, also find other catkin packages
 	## libraries found here are added to catkin_LIBRARIES and linked automatically
   ## found:all libs in the COMPONENTS also in package.xml depends by yuhs
-	find_package(catkin COMPONENTS serial roslib roscpp rosconsole tf gps_msgs sensor_msgs nav_msgs)
+	find_package(catkin COMPONENTS serial roslib roscpp rosconsole tf msgs_ht sensor_msgs nav_msgs)
 	
   ## LIBRARIES: libraries you create in this project that dependent projects also need
 	## CATKIN_DEPENDS: catkin_packages dependent projects also need
@@ -39,7 +39,7 @@ if (BUILD_WITH_ROS)
 	catkin_package(
 	  INCLUDE_DIRS include
 	  LIBRARIES novatel
-	  CATKIN_DEPENDS serial roslib roscpp rosconsole tf gps_msgs nav_msgs sensor_msgs
+	  CATKIN_DEPENDS serial roslib roscpp rosconsole tf msgs_ht nav_msgs sensor_msgs
 	  DEPENDS Boost
 	)
 else()

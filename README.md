@@ -32,6 +32,32 @@ cpy xxx.gps novatel_ws/devel/lib/novatel/
 			)
 	如果是系统自带的package，是直接可以findpackage找到的，不是系统环境变量中的，需要这么操作
 
+#remote debug on ipc
+## ssh connect
+问题：ssh connection refused
+解决：在工控机上运行
+sudo apt-get -purge  remove  openssh-server
+sudo apt-get install openssh-server
+然后重启 ssh服务
+sudo /etc/init.d/ssh restart
+
+##linux下串口调试助手简介
+### minicom使用
+sudo minicom
+ctrl-a o 设置
+ctrl-a z e 打开下发命令回显,下发的命令即可显示出来，然后回车即可
+ctrl-a q 退出
+
+如果下面不停的上传命令，下发方法
+中键拷贝命令然后迅速回车即可
+
+###其他备选调试助手
+cli串口助手
+	minicom
+gui com助手
+	gtkterm
+	cutecom
+	moni
 
 ## conf
 ### config the pc
@@ -43,14 +69,7 @@ KERNEL=="ttyS[0-9]*",MODE=="0666"
 
 ##info about novatel protocol
 
-## minicom使用
-sudo minicom
-ctrl-a o 设置
-ctrl-a z e 打开下发命令回显
-ctrl-a q 退出
 
-如果下面不停的上传命令，下发方法
-中键拷贝命令然后迅速回车即可
 
 
 ### 总体规则：
@@ -73,16 +92,17 @@ log loglist  //查看输出配置
 #### config the mobile station for xcmg
 ##### cmd list
 freset
-com com2 115200 n 8 1 n off n
+com com2 115200 n 8 1 n off on
 interfacemode com2 rtca none off
 com com1 115200
-log com1 inspvasb ontime 0.01
-log com1 imratepvab onnew
+log com1 inspvasb ontime 0.1
+log com1 imuratepvab onnew
 log insposb ontime 1
 saveconfig
 
 
-com com2 115200 n 8 1 n off n
+
+com com2 115200 n 8 1 n off on
 interfacemode com2 rtca none off
 log inspvaa ontime 1
 log inspvab ontime 1
