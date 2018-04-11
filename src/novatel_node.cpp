@@ -96,7 +96,8 @@ NovatelNode::~NovatelNode()
   this->disconnect();
 }
 
-std::string NovatelNode::track_file_output_path_ = "";
+std::string NovatelNode::track_file_output_path_only_xy_ = "";
+std::string NovatelNode::track_file_output_path_xy_hd_ = "";
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
 {
@@ -481,16 +482,16 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
-  if (CODE_STATE == test_catch_track_file_)
+  if (CODE_STATE == test_catch_track_file_xy_hd_)
   {
     static int track_point_cnt = 0;
 
-    std::ofstream track_file_out(NovatelNode::track_file_output_path_.c_str(), ios::app | ios::out);
+    std::ofstream track_file_out(NovatelNode::track_file_output_path_only_xy_.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
     if (!track_file_out.is_open())
     {
-      cout << "open track_file_out:" << track_file_output_path_ << " failed!!!" << endl;
+      cout << "open track_file_out:" << track_file_output_path_only_xy_ << " failed!!!" << endl;
     }
     else
     {
@@ -638,11 +639,20 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
   }
 
-  nh_.param("track_file_output_path", track_file_output_path_, std::string(""));
-  if (track_file_output_path_ != "")
+  nh_.param("track_file_output_path_only_xy", track_file_output_path_only_xy_, std::string(""));
+  if (track_file_output_path_only_xy_ != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_output_path_: " << track_file_output_path_);
-    CODE_STATE = test_catch_track_file_;
+    ROS_INFO_STREAM(name_ << ": track_file_output_path_only_xy_: " << track_file_output_path_only_xy_);
+    CODE_STATE = test_catch_track_file_only_xy_;
+    log_commands_ = "bestposb ontime 0.1";
+  }
+
+  nh_.param("track_file_output_path_xy_hd", track_file_output_path_xy_hd_, std::string(""));
+  if (track_file_output_path_xy_hd_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_hd_: " << track_file_output_path_xy_hd_);
+    CODE_STATE = test_catch_track_file_xy_hd_;
+    log_commands_ = "com1 inspvasa ontime 0.1";
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));

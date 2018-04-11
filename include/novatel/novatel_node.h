@@ -33,7 +33,8 @@ typedef enum
     solo_debug_max_ = solo_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
                                                       //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 
-  test_catch_track_file_,     //特殊测试状态
+  test_catch_track_file_xy_hd_,     //特殊测试状态
+  test_catch_track_file_only_xy_,     //特殊测试状态
   ori_gps_file_convert_,      //特殊测试状态
     
       simulate_nodes_debug_,                 //不连接设备的调试
@@ -77,7 +78,8 @@ public:
 
 public://data
   static int gps_update_hz_;
-  static std::string track_file_output_path_;
+  static std::string track_file_output_path_only_xy_;
+  static std::string track_file_output_path_xy_hd_;
 
 protected:
   void send_rest_locate_data_frq_func();
