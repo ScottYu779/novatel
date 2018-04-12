@@ -484,12 +484,12 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   {
     static int track_point_cnt = 0;
 
-    std::ofstream track_file_out(NovatelNode::track_file_output_path_only_xy_.c_str(), ios::app | ios::out);
+    std::ofstream track_file_out(NovatelNode::track_file_output_path_xy_hd_.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
     if (!track_file_out.is_open())
     {
-      cout << "open track_file_out:" << track_file_output_path_only_xy_ << " failed!!!" << endl;
+      cout << "open track_file_out:" << track_file_output_path_xy_hd_ << " failed!!!" << endl;
     }
     else
     {
@@ -650,7 +650,7 @@ bool NovatelNode::getParameters()
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_hd_: " << track_file_output_path_xy_hd_);
     CODE_STATE = test_catch_track_file_xy_hd_;
-    log_commands_ = "com1 inspvasa ontime 0.1";
+    log_commands_ = "inspvab ontime 0.1";
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));
