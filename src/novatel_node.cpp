@@ -699,7 +699,7 @@ bool NovatelNode::getParameters()
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_xyv: " << track_file_output_path_xyv_);
     CODE_STATE = test_catch_track_file_only_xyv_;
-    log_commands_ = "bestposb ontime 0.1";
+    log_commands_ = "bestutmb ontime 0.1; bestvelb ontime 0.1";
   }
 
 
