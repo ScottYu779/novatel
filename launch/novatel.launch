@@ -23,7 +23,7 @@
     <param name="height_zero" value="49.7905 " />
     <param name="gps_update_hz" value="10 " />
 		<param name="ori_track_file_path" value="" />
-		<param name="track_file_output_path_only_xy" value="" />
+		<param name="track_file_output_path_xy" value="" />
 		<param name="track_file_output_path_xy_hd" value="" />
 		<param name="track_file_input_path_for_test_simulate" value="" />
 

@@ -96,7 +96,7 @@ NovatelNode::~NovatelNode()
   this->disconnect();
 }
 
-std::string NovatelNode::track_file_output_path_only_xy_ = "";
+std::string NovatelNode::track_file_output_path_xy_ = "";
 std::string NovatelNode::track_file_output_path_xy_hd_ = "";
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
@@ -637,10 +637,10 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
   }
 
-  nh_.param("track_file_output_path_only_xy", track_file_output_path_only_xy_, std::string(""));
-  if (track_file_output_path_only_xy_ != "")
+  nh_.param("track_file_output_path_xy", track_file_output_path_xy_, std::string(""));
+  if (track_file_output_path_xy_ != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_output_path_only_xy_: " << track_file_output_path_only_xy_);
+    ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_: " << track_file_output_path_xy_);
     CODE_STATE = test_catch_track_file_only_xy_;
     log_commands_ = "bestposb ontime 0.1";
   }

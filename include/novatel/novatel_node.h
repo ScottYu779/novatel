@@ -78,7 +78,7 @@ public:
 
 public://data
   static int gps_update_hz_;
-  static std::string track_file_output_path_only_xy_;
+  static std::string track_file_output_path_xy_;
   static std::string track_file_output_path_xy_hd_;
 
 protected:

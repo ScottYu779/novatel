@@ -1,27 +1,22 @@
-Novatel GPS Driver
+[TOC]
+
+Driver For Novatel GPS
 ==================
-  
+
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
 
-#update log
+# log
+## update log
 2018-03-28 15:11:58 [author]scott yu,[log]init proj for huituo
 2018-03-31 11:59:06 [author]scott yu,[log]增加了调试模式和正常工作模式的区分代码
 2018-04-08 17:50:12 [author]scott yu,[log]增加设备设置自动化功能，设备利用launch里边的配置命令进行配置，可以进行轨迹采集，不需要经过.gps文件即可完成
 
-#usage for user
-## novatel_node
-source ~/novatel_ws/devel/setup.bash
-roslaunch novatel novatel.launch
-
-## read .gps file to output track file
-cd ~/novatel_ws/devel/lib/novatel/
-cpy xxx.gps novatel_ws/devel/lib/novatel/
-./novatel_read_from_file xxx.gps  //可以从tower获取我们的测试时候采集的.gps数据 如有疑问 请联系作者
 
 
-#debug log
+
+## debug log
 2018-03-31 15:06:46 src/下的 A包找不到依赖的b包
-	一个工作空间中的A包需要使用B中的数据，需要在A包中的package.xml中编译和运行要对B包进行相关依赖
+一个工作空间中的A包需要使用B中的数据，需要在A包中的package.xml中编译和运行要对B包进行相关依赖
 	同时需要将B包的名字写到A包的cmakelists.txt中下面两个地方，比如A包是novatel，B包是gps-msgs
 		find_package(catkin COMPONENTS serial roslib roscpp rosconsole tf gps_msgs sensor_msgs nav_msgs)
 		catkin_package(
@@ -32,7 +27,31 @@ cpy xxx.gps novatel_ws/devel/lib/novatel/
 			)
 	如果是系统自带的package，是直接可以findpackage找到的，不是系统环境变量中的，需要这么操作
 
-#remote debug on ipc
+# usage for user
+## run novatel_node
+source ~/novatel_ws/devel/setup.bash
+cd ~/catkin_ws
+catkin_make
+roslaunch novatel novatel.launch
+
+## 采集轨迹数据
+设置 launch/novatel.launch里边的
+<param name="track_file_output_path_only_xy" value="" />
+<param name="track_file_output_path_xy_hd" value="" />
+的路径信息，即可完成采集相应的轨迹数据
+1，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y
+2，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y heading
+
+
+## read .gps file to output track file
+
+将cmakelist中的这句话add_executable(novatel_read_from_file examples/novatel_read_from_file.cpp)的注释放开
+
+cd ~/novatel_ws/devel/lib/novatel/
+//可以从tower获取我们的测试时候采集的.gps数据 如有疑问 请联系作者
+cpy xxx.gps novatel_ws/devel/lib/novatel/ ./novatel_read_from_file xxx.gps  
+
+# remote debug on ipc
 ## ssh connect
 问题：ssh connection refused
 解决：在工控机上运行
@@ -41,7 +60,7 @@ sudo apt-get install openssh-server
 然后重启 ssh服务
 sudo /etc/init.d/ssh restart
 
-##linux下串口调试助手简介
+## linux下串口调试助手简介
 ### minicom使用
 sudo minicom
 ctrl-a o 设置
@@ -51,7 +70,7 @@ ctrl-a q 退出
 如果下面不停的上传命令，下发方法
 中键拷贝命令然后迅速回车即可
 
-###其他备选调试助手
+### 其他备选调试助手
 cli串口助手
 	minicom
 gui com助手
@@ -59,6 +78,20 @@ gui com助手
 	cutecom
 	moni
 
+# novatel
+## 问题解决
+- inspva数据上来经纬度为0，但是bestpos数据有
+
+用window下的novatel软件进行配置组合惯导信息
+1、获取组合惯导配置手册《novatel组合惯导配置手册.docx》如果找不到 请联系 hongsong.yu
+2、获取imu在车上的姿态，imu是fsas型号，手册中有imu的方位信息
+3、imu的朝向和车体方向的关系请参照手册中的信息
+4、打开win下的软件，工具栏有个wizard，打开里边的span aliament即可进行设置
+5、设置完成后，会弹出一个界面，显示组合惯导数据，这个里边没有数据
+6、要查看数据，还是通过inspvaa的命令在串口终端查看，会发现数据上来了
+- 串口助手没有数据上来
+排查方法
+1、
 ## conf
 ### config the pc
 get the Authentication of comm to usb
@@ -67,7 +100,7 @@ KERNEL=="ttyUSB[0-9]*",MODE=="0666"
 KERNEL=="ttyS[0-9]*",MODE=="0666"
 
 
-##info about novatel protocol
+## info about novatel protocol
 
 
 
@@ -130,6 +163,8 @@ saveconfig
 	保存设置
 
 
+
+
 ### 方法论methodology
 	要知道什么msg的id的内容，可以直接在《OEM7_Commands_Logs_Manual.pdf》文档中查询对应的id的描述
 	然后里边会有log的指令，
@@ -147,7 +182,6 @@ saveconfig
 	如上面内容所示，有:log bestutma ontime 1内容，这个命令就是让novatel惯导系统输出bestutm的信息
 	1代表数据更新周期，单位为sec
 
-
 # Installation 
 
 ## ROS Install
@@ -158,7 +192,7 @@ The serial and Novatel packages are both "wet" packages and require Catkin.  To 
 	cd ~/novatel_ws/src
 	catkin_init_workspace
 	wstool init ./
-	
+
 Next, add the Serial, GPS Messages, and Novatel packages to the workspace:
 
 	wstool set serial --git git@github.com:wjwwood/serial.git
@@ -171,7 +205,6 @@ Finally, build the packages:
 	cd ../
 	catkin_make
 
-
 ## Standalone Install
 
 Although Catkin is the preferred build method, both packages can be installed without Catkin.  An older version of the serial library can be installed using the instructions below:
@@ -181,26 +214,25 @@ Although Catkin is the preferred build method, both packages can be installed wi
 	git checkout fuerte
 	make
 	sudo make install
-	
+
 Next, the Novatel library can be installed by:
 
 	git clone git@github.com:GAVLab/novatel.git
 	cd novatel
 	make
 	sudo make install
-	
+
 The above commands will build and install the Novatel static library.  To also build an example program for testing the interface:
 
 	cd build
 	cmake ../ -DNOVATEL_BUILD_EXAMPLES=ON
 	make
-	
+
 To build the optional Novatel tests:
 
 	cd build
 	cmake ../ -DNOVATEL_BUILD_TESTS=ON
 	make
-
 
 # Operation
 
