@@ -484,19 +484,19 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   {
     static int track_point_cnt = 0;
 
-    std::ofstream track_file_out(NovatelNode::track_file_output_path_only_xy_.c_str(), ios::app | ios::out);
+    std::ofstream track_file_out(NovatelNode::track_file_output_path_xy_hd_.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
     if (!track_file_out.is_open())
     {
-      cout << "open track_file_out:" << track_file_output_path_only_xy_ << " failed!!!" << endl;
+      cout << "open track_file_out:" << track_file_output_path_xy_hd_ << " failed!!!" << endl;
     }
     else
     {
       track_file_out << setprecision(2)
                      << track_point_cnt++ << " "
-                     << (easting - Novatel::x_zero) << " "
-                     << (northing - Novatel::y_zero)
+                     << gps_data_ht_.odom.pose.pose.position.x << " "
+                     << gps_data_ht_.odom.pose.pose.position.y << " "
                      << gps_data_ht_.heading << " "
                      << endl;
     }
