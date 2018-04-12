@@ -650,7 +650,7 @@ bool NovatelNode::getParameters()
   {
     ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_hd_: " << track_file_output_path_xy_hd_);
     CODE_STATE = test_catch_track_file_xy_hd_;
-    log_commands_ = "com1 inspvasa ontime 0.1";
+    log_commands_ = "inspvab ontime 0.1";
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));

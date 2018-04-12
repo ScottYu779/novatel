@@ -46,7 +46,7 @@ typedef enum
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = solo_debug_single_gps_device_;
+int CODE_STATE  = solo_debug_rtk_;
 
 
 
