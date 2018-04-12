@@ -495,8 +495,8 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
     {
       track_file_out << setprecision(2)
                      << track_point_cnt++ << " "
-                     << (easting - Novatel::x_zero) << " "
-                     << (northing - Novatel::y_zero)
+                     << gps_data_ht_.odom.pose.pose.position.x << " "
+                     << gps_data_ht_.odom.pose.pose.position.y << " "
                      << gps_data_ht_.heading << " "
                      << endl;
     }
