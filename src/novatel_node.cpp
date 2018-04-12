@@ -312,12 +312,10 @@ void NovatelNode::run()
         }
       }
     }
-
-    
   }
+  else
   {
     ROS_INFO("port is null!!!!!!!! ");
-
   }
   ros::spin(); //programe will hang up here
 

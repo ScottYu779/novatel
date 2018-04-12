@@ -94,7 +94,7 @@ log loglist  //≤Èø¥ ‰≥ˆ≈‰÷√
 freset
 com com2 115200 n 8 1 n off on
 interfacemode com2 rtca none off
-com com1 115200
+serialconfig com1 115200
 log com1 inspvasb ontime 0.1
 log com1 imuratepvab onnew
 log insposb ontime 1
