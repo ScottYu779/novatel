@@ -97,6 +97,7 @@ NovatelNode::~NovatelNode()
 }
 
 std::string NovatelNode::track_file_output_path_xy_ = "";
+std::string NovatelNode::track_file_output_path_xyv_ = "";
 std::string NovatelNode::track_file_output_path_xy_hd_ = "";
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
@@ -388,7 +389,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   time(&current_time);
   local_time = localtime(&current_time);
   gettimeofday(&tv, &tz);
-
+  
   gps_data_ht_.heading = sqrt(pow(cur_odom_.twist.twist.angular.x, 2) + pow(cur_odom_.twist.twist.angular.y, 2));
   gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
   gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
@@ -396,7 +397,56 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
-  std::cout << "["
+  
+
+  //#####################
+
+  if (CODE_STATE == test_catch_track_file_only_xyv_)
+  {
+    static int track_point_cnt = 0;
+    struct tm *local_time;
+    time_t current_time;
+    struct timeval tv;
+    struct timezone tz;
+    time(&current_time);
+    local_time = localtime(&current_time);
+    gettimeofday(&tv, &tz);
+
+    //cost 5us
+
+    std::ofstream track_file_out(NovatelNode::track_file_output_path_xyv_.c_str(), ios::app | ios::out);
+    track_file_out.setf(std::ios::fixed, ios::floatfield);
+    //track_file_out.precision(5);
+    if (!track_file_out.is_open())
+    {
+      cout << "open fiile fail" << endl;
+    }
+    else
+      track_file_out  << setprecision(2) 
+                      << track_point_cnt++ << " " 
+                      << gps_data_ht_.odom.pose.pose.position.x << " " 
+                      << gps_data_ht_.odom.pose.pose.position.y << " " 
+                      << gps_data_ht_.velocity << " " 
+                      << endl;
+
+    std::cout << local_time->tm_year + 1900 << "-"
+              << local_time->tm_mon + 1 << "-"
+              << local_time->tm_mday << " "
+              << local_time->tm_hour << ":"
+              << local_time->tm_min << ":"
+              << local_time->tm_sec << "."
+              << tv.tv_usec << "," << std::endl
+
+              << "  x_zero: " << Novatel::x_zero << std::endl
+              << "  y_zero: " << Novatel::y_zero << std::endl
+              << "  x: " << gps_data_ht_.odom.pose.pose.position.x << std::endl
+              << "  y: " << gps_data_ht_.odom.pose.pose.position.y << std::endl
+              << "  z: " << gps_data_ht_.odom.pose.pose.position.z << std::endl
+              << std::endl;
+  }
+  else
+  {
+    std::cout << "["
             << local_time->tm_year + 1900 << "-"
             << local_time->tm_mon + 1 << "-"
             << local_time->tm_mday << " "
@@ -413,8 +463,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
             << " [x_zero]:" << Novatel::x_zero << ","
             << " [y_zero]:" << Novatel::y_zero << ","
             << std::endl;
-
-  //#####################
+  }
 }
 
 void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &timestamp)
@@ -644,6 +693,15 @@ bool NovatelNode::getParameters()
     CODE_STATE = test_catch_track_file_only_xy_;
     log_commands_ = "bestposb ontime 0.1";
   }
+
+  nh_.param("track_file_output_path_xyv", track_file_output_path_xyv_, std::string(""));
+  if (track_file_output_path_xyv_ != "")
+  {
+    ROS_INFO_STREAM(name_ << ": track_file_output_path_xyv: " << track_file_output_path_xyv_);
+    CODE_STATE = test_catch_track_file_only_xyv_;
+    log_commands_ = "bestposb ontime 0.1";
+  }
+
 
   nh_.param("track_file_output_path_xy_hd", track_file_output_path_xy_hd_, std::string(""));
   if (track_file_output_path_xy_hd_ != "")

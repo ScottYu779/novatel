@@ -35,6 +35,7 @@ typedef enum
 
   test_catch_track_file_xy_hd_,     //特殊测试状态
   test_catch_track_file_only_xy_,     //特殊测试状态
+  test_catch_track_file_only_xyv_,     //特殊测试状态
   ori_gps_file_convert_,      //特殊测试状态
     
       simulate_nodes_debug_,                 //不连接设备的调试
@@ -79,6 +80,7 @@ public:
 public://data
   static int gps_update_hz_;
   static std::string track_file_output_path_xy_;
+  static std::string track_file_output_path_xyv_;
   static std::string track_file_output_path_xy_hd_;
 
 protected:
