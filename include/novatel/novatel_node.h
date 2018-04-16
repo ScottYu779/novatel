@@ -57,6 +57,7 @@ typedef struct
   uint32_t num;
   double x;
   double y;
+  double h;
 }track_data;
 
 // ROS Node class

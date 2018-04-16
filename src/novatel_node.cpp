@@ -141,6 +141,7 @@ void NovatelNode::send_rest_locate_data_frq_func()
 {
   static float x_zero_simulate = 0;
   static float y_zero_simulate = 0;
+  static float h_zero_simulate = 0;
   std::ifstream track_file(track_file_input_path_for_test_simulate_.c_str(), std::ios::binary);
 
   if (!track_file.is_open())
@@ -163,7 +164,8 @@ void NovatelNode::send_rest_locate_data_frq_func()
     tokenizer::iterator current_token = tokens.begin();
     track_data_temp.num = atof((*(current_token++)).c_str());
     track_data_temp.x = atof((*(current_token++)).c_str());
-    track_data_temp.y = atof((*(current_token)).c_str());
+    track_data_temp.y = atof((*(current_token++)).c_str());
+    track_data_temp.h = atof((*(current_token)).c_str());
     if (x_zero_simulate >= 0.0)
     {
       if ((track_data_temp.x >= 1) || (track_data_temp.x <= -1))
@@ -177,6 +179,13 @@ void NovatelNode::send_rest_locate_data_frq_func()
         y_zero_simulate = track_data_temp.y;
       else
         y_zero_simulate = -1.0;
+    }
+    if (h_zero_simulate >= 0.0)
+    {
+      if ((track_data_temp.h >= 1) || (track_data_temp.h <= -1))
+        h_zero_simulate = track_data_temp.h;
+      else
+        h_zero_simulate = -1.0;
     }
     track_datas_t.push_back(track_data_temp);
   }
@@ -197,6 +206,10 @@ void NovatelNode::send_rest_locate_data_frq_func()
           ((float)((int)((  \
                         (it->y - y_zero_simulate)   //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+      gps_data_ht_.heading =
+          ((float)((int)((  \
+                        (it->h - h_zero_simulate)   //被转换的数据或者表达式放在这里
+                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
 
       // cout << "simulate publishing" 
       //         << " x: " << gps_data_ht_.odom.pose.pose.position.x 
@@ -205,7 +218,8 @@ void NovatelNode::send_rest_locate_data_frq_func()
 
       ROS_INFO_STREAM("simulate publishing" 
               << " x: " << gps_data_ht_.odom.pose.pose.position.x 
-              << " y: " << gps_data_ht_.odom.pose.pose.position.y);
+              << " y: " << gps_data_ht_.odom.pose.pose.position.y
+              << " h: " << gps_data_ht_.heading);
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
       usleep(100*1000); //fucn sleep uinit is: 1 sec
