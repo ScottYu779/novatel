@@ -139,6 +139,8 @@ int NovatelNode::get_ori_track_data_for_init_data()
 
 void NovatelNode::send_rest_locate_data_frq_func()
 {
+  static float x_zero_simulate = 0;
+  static float y_zero_simulate = 0;
   std::ifstream track_file(track_file_input_path_for_test_simulate_.c_str(), std::ios::binary);
 
   if (!track_file.is_open())
@@ -162,24 +164,54 @@ void NovatelNode::send_rest_locate_data_frq_func()
     track_data_temp.num = atof((*(current_token++)).c_str());
     track_data_temp.x = atof((*(current_token++)).c_str());
     track_data_temp.y = atof((*(current_token)).c_str());
-    //cout << "num is:" << track_data_temp.num << endl;
-    //cout << "lati is:" << track_data_temp.x << endl;
-    //cout << "longi is:" << track_data_temp.y << endl;
+    if (x_zero_simulate >= 0.0)
+    {
+      if ((track_data_temp.x >= 1) || (track_data_temp.x <= -1))
+        x_zero_simulate = track_data_temp.x;
+      else
+        x_zero_simulate = -1.0;
+    }
+    if (y_zero_simulate >= 0.0)
+    {
+      if ((track_data_temp.y >= 1) || (track_data_temp.y <= -1))
+        y_zero_simulate = track_data_temp.y;
+      else
+        y_zero_simulate = -1.0;
+    }
     track_datas_t.push_back(track_data_temp);
   }
-  //cout << "string nums is:" << strings.size() << endl;
+  
   cout << "track_datas_t size is:" << track_datas_t.size() << endl;
 
+  double num = 2;
   while (1)
   {
     for (vector<track_data>::iterator it = track_datas_t.begin(); it != track_datas_t.end(); ++it)
     {
-      gps_data_ht_.odom.pose.pose.position.x = it->x;
-      gps_data_ht_.odom.pose.pose.position.y = it->y;
+      //只保留小数点后num个位数
+      gps_data_ht_.odom.pose.pose.position.x =
+          ((float)((int)((  \
+                             (it->x - x_zero_simulate) + (5 / pow(10, num))) *  \
+                         pow(10, num)))) /  \
+          pow(10, num);
+      gps_data_ht_.odom.pose.pose.position.y =
+          ((float)((int)((  \
+                             (it->y - y_zero_simulate) + (5 / pow(10, num))) *  \
+                         pow(10, num)))) /  \
+          pow(10, num);
+
+      // cout << "simulate publishing" 
+      //         << " x: " << gps_data_ht_.odom.pose.pose.position.x 
+      //         << " y: " << gps_data_ht_.odom.pose.pose.position.y 
+      //         << endl;
+
+      ROS_INFO_STREAM("simulate publishing" 
+              << " x: " << gps_data_ht_.odom.pose.pose.position.x 
+              << " y: " << gps_data_ht_.odom.pose.pose.position.y);
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
-
-      sleep((uint32_t)(1 / (NovatelNode::track_file_simulate_freq_))); //fucn sleep uinit is: 1 sec
+      usleep(100*1000); //fucn sleep uinit is: 1 sec
+      //ussleep(1); //fucn sleep uinit is: 1 sec
     }
   }
 }
@@ -717,7 +749,7 @@ bool NovatelNode::getParameters()
   }
 
   nh_.param("track_file_simulate_freq", NovatelNode::track_file_simulate_freq_, 0);
-  if (NovatelNode::track_file_simulate_freq_ != 0.0)
+  if (NovatelNode::track_file_simulate_freq_ != 0)
   {
     ROS_INFO_STREAM(name_ << ": track_file_simulate_freq_: " << NovatelNode::track_file_simulate_freq_);
   }

@@ -21,7 +21,6 @@
 		<param name="latitude_zero" value="34.399902777777775 " />
     <param name="longitude_zero" value="117.47107777777778 " />
     <param name="height_zero" value="49.7905 " />
-    <param name="gps_update_hz" value="10 " />
 		<param name="ori_track_file_path" value="" />
 		<param name="track_file_output_path_xy" value="" />
 		<param name="track_file_output_path_xyv" value="" />
@@ -29,7 +28,7 @@
 		<param name="track_file_output_path_xy_hd" value="" />
 
 		<param name="track_file_input_path_for_test_simulate" value="/home/yuhs/catkin_ws/src/novatel/data/record/track_xyh_1.txt" />
-		<param name="track_file_simulate_freq" value="10" />
+		<param name="track_file_simulate_freq" value="2" />
 
 	</node>
 
