@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [TOC]
 
 Driver For Novatel GPS
@@ -259,3 +260,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # Authors
 
 Scott Yu <hongsong.yu2010@gmail.com>
+=======
+# novatel
+driver for novatel oem6
+>>>>>>> fce4cfdb568bf61c4ddaf7a483bf1205a7757a9f
