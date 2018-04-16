@@ -21,7 +21,7 @@ typedef enum
       team_debug_on_car_,
     team_debug_min_ = team_debug_on_car_,//范围控制边界
   debug_min_ = team_debug_min_,//范围控制边界
-      team_debug_single_rtk_,
+      team_debug_rtk_,
       team_debug_single_gps_device_,
     team_debug_max_ = team_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
                                                       //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
@@ -33,21 +33,22 @@ typedef enum
     solo_debug_max_ = solo_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
                                                       //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 
-  test_catch_track_file_xy_hd_,     //特殊测试状态
-  test_catch_track_file_only_xy_,     //特殊测试状态
-  test_catch_track_file_only_xyv_,     //特殊测试状态
-  ori_gps_file_convert_,      //特殊测试状态
+    test_catch_track_file_xy_hd_,     //特殊测试状态
+    test_catch_track_file_only_xy_,     //特殊测试状态
+    test_catch_track_file_only_xyv_,     //特殊测试状态
+    ori_gps_file_convert_,      //特殊测试状态
     
-      simulate_nodes_debug_,                 //不连接设备的调试
-    simulate_debug_min_ = simulate_nodes_debug_,//范围控制边界
-    simulate_debug_max_ = simulate_nodes_debug_,//范围控制边界
+      simulate_single_node_debug_,                 //不连接设备的调试
+    simulate_debug_min_ = simulate_single_node_debug_,//范围控制边界
+      simulate_multi_nodes_debug_,//多节点虚拟数据测试
+    simulate_debug_max_ = simulate_multi_nodes_debug_,//范围控制边界
   debug_max_ = simulate_debug_max_,//调试阶段和非调试阶段的分界线
   
   max_ = debug_max_,
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = solo_debug_rtk_;
+int CODE_STATE  = team_debug_rtk_;
 
 
 
@@ -78,7 +79,7 @@ public:
   void run();
 
 public://data
-  static int gps_update_hz_;
+  static int track_file_simulate_freq_;
   static std::string track_file_output_path_xy_;
   static std::string track_file_output_path_xyv_;
   static std::string track_file_output_path_xy_hd_;

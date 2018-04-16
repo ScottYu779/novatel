@@ -73,6 +73,10 @@ static double degrees_square_to_radians_square = degrees_to_radians * degrees_to
 
 static double sigma_v = 0.05; // velocity std dev in m/s
 
+
+int NovatelNode::track_file_simulate_freq_ = 10; //1hz
+
+
 NovatelNode::NovatelNode() : nh_("~")
 {
   pub_init_data_done = 0;
@@ -175,7 +179,7 @@ void NovatelNode::send_rest_locate_data_frq_func()
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
 
-      sleep((uint32_t)(1 / (Novatel::gps_update_hz_))); //fucn sleep uinit is: 1 sec
+      sleep((uint32_t)(1 / (NovatelNode::track_file_simulate_freq_))); //fucn sleep uinit is: 1 sec
     }
   }
 }
@@ -200,23 +204,19 @@ void NovatelNode::run()
             << "  y_zero: " << Novatel::y_zero << std::endl
             << std::endl;
 
-  if (port_ != "")
+  if ((simulate_debug_min_ <= CODE_STATE) && (CODE_STATE <= simulate_debug_max_))
   {
-    if ((simulate_debug_min_ <= CODE_STATE) && (CODE_STATE <= simulate_debug_max_))
-      ROS_INFO("debug mode:no connect serial!!!!!!!!!!!!!!!!!!!!!!");
-    else
+    ROS_INFO("simulate_mode!!!!!!!!!!!!!!!!!!!!!!");
+
+    boost::shared_ptr<boost::thread> read_thread_ptr_ =
+        boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&NovatelNode::send_rest_locate_data_frq_func, this)));
+  }
+  else
+  {
+    if (port_ != "")
+    {
       gps_.Connect(port_, baudrate_);
 
-    if ((simulate_debug_min_ <= CODE_STATE) && (CODE_STATE <= simulate_debug_max_))
-    {
-      ROS_INFO("debug mode:no config novatel!!!!!!!!!!!!!!!!!!!!!!");
-
-      boost::shared_ptr<boost::thread> read_thread_ptr_ =
-          boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&NovatelNode::send_rest_locate_data_frq_func, this)));
-    
-    }
-    else
-    {
       // configure default log sets
       if (gps_default_logs_period_ > 0)
       {
@@ -313,11 +313,12 @@ void NovatelNode::run()
         }
       }
     }
+    else
+    {
+      ROS_INFO("port is null!!!!!!!! ");
+    }
   }
-  else
-  {
-    ROS_INFO("port is null!!!!!!!! ");
-  }
+
   ros::spin(); //programe will hang up here
 
 } // function
@@ -483,6 +484,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   local_time = localtime(&current_time);
   gettimeofday(&tv, &tz);
 
+  //real time convert the locate data
   gps_.ConvertLLaUTM(ins_pva.latitude, ins_pva.longitude, &northing, &easting, &zoneNum, &north);
 
   sensor_msgs::NavSatFix sat_fix;
@@ -673,11 +675,7 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": height_zero: " << Novatel::z_zero);
   }
 
-  nh_.param("gps_update_hz", Novatel::gps_update_hz_, 0);
-  if (Novatel::gps_update_hz_ != 0.0)
-  {
-    ROS_INFO_STREAM(name_ << ": gps_update_hz: " << Novatel::gps_update_hz_);
-  }
+  
 
   nh_.param("ori_track_file_path", ori_track_file_path_, std::string(""));
   if (ori_track_file_path_ != "")
@@ -714,7 +712,14 @@ bool NovatelNode::getParameters()
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));
   if (track_file_input_path_for_test_simulate_ != "")
   {
+    CODE_STATE = simulate_multi_nodes_debug_;
     ROS_INFO_STREAM(name_ << ": track_file_input_path_for_test_simulate_: " << track_file_input_path_for_test_simulate_);
+  }
+
+  nh_.param("track_file_simulate_freq", NovatelNode::track_file_simulate_freq_, 0);
+  if (NovatelNode::track_file_simulate_freq_ != 0.0)
+  {
+    ROS_INFO_STREAM(name_ << ": track_file_simulate_freq_: " << NovatelNode::track_file_simulate_freq_);
   }
 
   return true;

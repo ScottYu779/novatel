@@ -25,7 +25,7 @@ double Novatel::latitude_zero = 34.399902777777775;
 double Novatel::longitude_zero = 117.47107777777778;
 int Novatel::zoneNum = 0;
 bool Novatel::north = true;
-int Novatel::gps_update_hz_ = 10; //1hz
+
 
 /* --------------------------------------------------------------------------
 Calculate a CRC value to be used by CRC calculation functions.
