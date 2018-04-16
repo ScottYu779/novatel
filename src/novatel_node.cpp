@@ -203,11 +203,11 @@ void NovatelNode::send_rest_locate_data_frq_func()
                         (it->x - x_zero_simulate)  //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
       gps_data_ht_.odom.pose.pose.position.y =
-          ((float)((int)((  \
+          ((float)((int)((
                         (it->y - y_zero_simulate)   //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
       gps_data_ht_.heading =
-          ((float)((int)((  \
+          ((float)((int)((
                         (it->h - h_zero_simulate)   //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
 
