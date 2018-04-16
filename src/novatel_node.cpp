@@ -190,13 +190,13 @@ void NovatelNode::send_rest_locate_data_frq_func()
     {
       //只保留小数点后num个位数
       gps_data_ht_.odom.pose.pose.position.x =
-          ((float)((int)((  \
-                        (it->x - x_zero_simulate) + (5 / pow(10, num))) *  \  //被转换的数据或者表达式放在这里
-                        pow(10, num)))) / pow(10, num);
+          ((float)((int)((
+                        (it->x - x_zero_simulate)  //被转换的数据或者表达式放在这里
+                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
       gps_data_ht_.odom.pose.pose.position.y =
           ((float)((int)((  \
-                        (it->y - y_zero_simulate) + (5 / pow(10, num))) *  \  //被转换的数据或者表达式放在这里
-                        pow(10, num)))) / pow(10, num);
+                        (it->y - y_zero_simulate)   //被转换的数据或者表达式放在这里
+                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
 
       // cout << "simulate publishing" 
       //         << " x: " << gps_data_ht_.odom.pose.pose.position.x 
