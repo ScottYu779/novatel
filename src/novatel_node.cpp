@@ -140,15 +140,17 @@ int NovatelNode::get_ori_track_data_for_init_data()
 
 void NovatelNode::send_rest_locate_data_frq_func()
 {
+  static float th_zero = 50.0;
   static float x_zero_simulate = 0;
   static float y_zero_simulate = 0;
-  static float h_zero_simulate = 0;
   std::ifstream track_file(track_file_input_path_for_test_simulate_.c_str(), std::ios::binary);
 
   if (!track_file.is_open())
   {
     std::cout << "track File " << track_file_input_path_for_test_simulate_ << " did not open." << std::endl;
   }
+  else
+    std::cout << "track File simulate " << track_file_input_path_for_test_simulate_ << " open ok!!!!!" << std::endl;
 
   std::vector<track_data> track_datas_t;
   string line;
@@ -167,26 +169,18 @@ void NovatelNode::send_rest_locate_data_frq_func()
     track_data_temp.x = atof((*(current_token++)).c_str());
     track_data_temp.y = atof((*(current_token++)).c_str());
     track_data_temp.h = atof((*(current_token)).c_str());
+    cout << "num " << track_data_temp.num << " x " << track_data_temp.x << " y " << track_data_temp.y << endl;
     if (x_zero_simulate >= 0.0)
     {
-      if ((track_data_temp.x >= 1) || (track_data_temp.x <= -1))
+      if (fabs(sqrt(pow(track_data_temp.x,2) + pow(track_data_temp.y,2))) >= th_zero)
+      {
         x_zero_simulate = track_data_temp.x;
-      else
-        x_zero_simulate = -1.0;
-    }
-    if (y_zero_simulate >= 0.0)
-    {
-      if ((track_data_temp.y >= 1) || (track_data_temp.y <= -1))
         y_zero_simulate = track_data_temp.y;
+        cout << "zero track_data_temp.x" << track_data_temp.x << endl;
+        cout << "zero track_data_temp.y" << track_data_temp.y << endl;
+      }
       else
-        y_zero_simulate = -1.0;
-    }
-    if (h_zero_simulate >= 0.0)
-    {
-      if ((track_data_temp.h >= 1) || (track_data_temp.h <= -1))
-        h_zero_simulate = track_data_temp.h;
-      else
-        h_zero_simulate = -1.0;
+        x_zero_simulate = -1.0;//判断一次即可
     }
     track_datas_t.push_back(track_data_temp);
   }
@@ -201,7 +195,6 @@ void NovatelNode::send_rest_locate_data_frq_func()
       //只保留小数点后num个位数
       gps_data_ht_.odom.pose.pose.position.x =
           ((float)((int)((
-<<<<<<< HEAD
                         (it->x - x_zero_simulate)  //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
       gps_data_ht_.odom.pose.pose.position.y =
@@ -210,16 +203,8 @@ void NovatelNode::send_rest_locate_data_frq_func()
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
       gps_data_ht_.heading =
           ((float)((int)((
-                        (it->h - h_zero_simulate)   //被转换的数据或者表达式放在这里
+                        (it->h)   //被转换的数据或者表达式放在这里
                          + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
-=======
-                        (it->x - x_zero_simulate) + (5 / pow(10, num))) *     //被转换的数据或者表达式放在这里
-                        pow(10, num)))) / pow(10, num);
-      gps_data_ht_.odom.pose.pose.position.y =
-          ((float)((int)((
-                        (it->y - y_zero_simulate) + (5 / pow(10, num))) *     //被转换的数据或者表达式放在这里
-                        pow(10, num)))) / pow(10, num);
->>>>>>> master
 
       // cout << "simulate publishing" 
       //         << " x: " << gps_data_ht_.odom.pose.pose.position.x 
@@ -227,6 +212,9 @@ void NovatelNode::send_rest_locate_data_frq_func()
       //         << endl;
 
       ROS_INFO_STREAM("simulate publishing" 
+
+              << " num: " << it->num
+              << " y_zero: " << y_zero_simulate
               << " x: " << gps_data_ht_.odom.pose.pose.position.x 
               << " y: " << gps_data_ht_.odom.pose.pose.position.y
               << " h: " << gps_data_ht_.heading);
@@ -578,7 +566,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   cur_odom_.twist.twist.angular.y = ins_pva.pitch;
   cur_odom_.twist.twist.angular.z = ins_pva.azimuth;
 
-  gps_data_ht_.heading = sqrt(pow(cur_odom_.twist.twist.angular.x, 2) + pow(cur_odom_.twist.twist.angular.y, 2));
+  gps_data_ht_.heading = cur_odom_.twist.twist.angular.z;
   gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
   gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
   gps_data_ht_.odom.pose.pose.position.y = cur_odom_.pose.pose.position.y - Novatel::y_zero;
@@ -721,6 +709,8 @@ bool NovatelNode::getParameters()
     cout << "get x_zero and y_zero by longitude_zero and longitude_zero" << endl;
     gps_.ConvertLLaUTM(Novatel::latitude_zero, Novatel::longitude_zero, &Novatel::y_zero, &Novatel::x_zero,
                        &Novatel::zoneNum, &Novatel::north);
+    Novatel::x_zero -= 18363.90;
+    Novatel::y_zero -= 10808;
   }
 
   nh_.param("height_zero", Novatel::z_zero, 0.0);
