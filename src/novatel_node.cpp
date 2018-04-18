@@ -212,11 +212,12 @@ void NovatelNode::send_rest_locate_data_frq_func()
       //         << endl;
 
       ROS_INFO_STREAM("simulate publishing" 
-              << " num: " << it->num
-              << " y_zero: " << y_zero_simulate
-              << " x: " << gps_data_ht_.odom.pose.pose.position.x 
-              << " y: " << gps_data_ht_.odom.pose.pose.position.y
-              << " h: " << gps_data_ht_.heading);
+
+              << " num: " << it->num<< endl
+              << " y_zero: " << y_zero_simulate<< endl
+              << " x: " << gps_data_ht_.odom.pose.pose.position.x << endl
+              << " y: " << gps_data_ht_.odom.pose.pose.position.y<< endl
+              << " h: " << gps_data_ht_.heading<< endl);
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
       usleep(100*1000); //fucn sleep uinit is: 1 sec
@@ -431,9 +432,14 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   time(&current_time);
   local_time = localtime(&current_time);
   gettimeofday(&tv, &tz);
-  
+  double num = 2; 
   gps_data_ht_.heading = sqrt(pow(cur_odom_.twist.twist.angular.x, 2) + pow(cur_odom_.twist.twist.angular.y, 2));
   gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
+  gps_data_ht_.velocity =
+          ((float)((int)((
+                        (gps_data_ht_.velocity) 
+                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+
   gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
   gps_data_ht_.odom.pose.pose.position.y = cur_odom_.pose.pose.position.y - Novatel::y_zero;
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
@@ -495,15 +501,15 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
             << local_time->tm_hour << ":"
             << local_time->tm_min << ":"
             << local_time->tm_sec << "."
-            << tv.tv_usec << "]"
-            << "utm publishing, "
+            << tv.tv_usec << "]"<< endl
+            << "utm pubing, "
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
-            << " [heading]:" << gps_data_ht_.heading
-            << " [velocity]:" << gps_data_ht_.velocity
-            << " [x_zero]:" << Novatel::x_zero << ","
-            << " [y_zero]:" << Novatel::y_zero << ","
+            << " [hd]:" << gps_data_ht_.heading
+            << " [v]:" << gps_data_ht_.velocity
+            << " [xz]:" << Novatel::x_zero << ","
+            << " [yz]:" << Novatel::y_zero << ","
             << std::endl;
   }
 }
@@ -601,14 +607,14 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_min << ":"
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
-            << "inspva publishing, "
+            << "inspva pubing, "
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
-            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
-            << " [heading]:" << gps_data_ht_.heading
-            << " [velocity]:" << gps_data_ht_.velocity
-            << " [x_zero]:" << Novatel::x_zero << ","
-            << " [y_zero]:" << Novatel::y_zero << ","
+            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
+            << " [hd]:" << gps_data_ht_.heading << ","
+            << " [v]:" << gps_data_ht_.velocity << ","
+            << " [xz]:" << Novatel::x_zero << ","
+            << " [yz]:" << Novatel::y_zero << ","
             << std::endl;
 
   // TODO: add covariance
@@ -708,8 +714,8 @@ bool NovatelNode::getParameters()
     cout << "get x_zero and y_zero by longitude_zero and longitude_zero" << endl;
     gps_.ConvertLLaUTM(Novatel::latitude_zero, Novatel::longitude_zero, &Novatel::y_zero, &Novatel::x_zero,
                        &Novatel::zoneNum, &Novatel::north);
-    Novatel::x_zero -= 18363.90;
-    Novatel::y_zero -= 10808;
+    //Novatel::x_zero -= 18363.90;
+    //Novatel::y_zero -= 10808;
   }
 
   nh_.param("height_zero", Novatel::z_zero, 0.0);
