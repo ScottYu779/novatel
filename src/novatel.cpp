@@ -1471,16 +1471,6 @@ void Novatel::BufferIncomingData(unsigned char *message, unsigned int length)
             if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
             {
                 log_info_("ready to parse");
-                // cout << sizeof(data_buffer_);
-                // for (uint32_t i_t = 0; i_t < sizeof(data_buffer_); i_t++)
-                // {
-                //     //cout << data_buffer_[i_t];
-                //     printf("%x, ", data_buffer_[i_t]);
-                //     // string msg_t;
-                //     //sprintf(msg_t,"%x," ,*(data_buffer_+i_t));
-                //     // log_info_(msg_t);
-                // }
-                // cout << endl;
             }
 
             ParseBinary(data_buffer_, buffer_index_, message_id_);

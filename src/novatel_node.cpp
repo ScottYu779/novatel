@@ -212,6 +212,7 @@ void NovatelNode::send_rest_locate_data_frq_func()
       //         << endl;
 
       ROS_INFO_STREAM("simulate publishing" 
+
               << " num: " << it->num
               << " y_zero: " << y_zero_simulate
               << " x: " << gps_data_ht_.odom.pose.pose.position.x 
@@ -604,9 +605,9 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << "inspva publishing, "
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
-            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
-            << " [heading]:" << gps_data_ht_.heading
-            << " [velocity]:" << gps_data_ht_.velocity
+            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
+            << " [heading]:" << gps_data_ht_.heading << ","
+            << " [velocity]:" << gps_data_ht_.velocity << ","
             << " [x_zero]:" << Novatel::x_zero << ","
             << " [y_zero]:" << Novatel::y_zero << ","
             << std::endl;
