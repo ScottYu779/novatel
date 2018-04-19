@@ -6,7 +6,7 @@
 	<node pkg="novatel" type="novatel_node" name="novatel_node" output="screen" 
 	    required="true">
 
-		<param name="port" value="/dev/ttyUSB0" />
+		<param name="port" value="/dev/ttyS0" />
 		<param name="baudrate" value="115200" />
 		<param name="odom_topic" value="/gps_odom" />
 		<!-- <param name="log_commands" value="" /> -->
@@ -18,14 +18,14 @@
 		<param name="gps_default_logs_period" value="0.05" />
 		<param name="span_default_logs_period" value="0.0" />
 
-		<param name="latitude_zero" value="34.399902777777775 " />
-    <param name="longitude_zero" value="117.47107777777778 " />
+		<param name="latitude_zero" value="34.39956925 " />
+    <param name="longitude_zero" value="117.4714643 " />
     <param name="height_zero" value="49.7905 " />
 		<param name="ori_track_file_path" value="" />
 		<param name="track_file_output_path_xy" value="" />
 		<param name="track_file_output_path_xyv" value="" />
 		<!-- <param name="track_file_output_path_xyv" value="/home/rlc/yuhs_ws/record_data/track_xyv_1.txt" /> -->
-		<param name="track_file_output_path_xy_hd" value="" />
+		<param name="track_file_output_path_xy_hd" value="/home/rlc/yuhs_ws/src/novatel/data/4-19/xyd-1.txt" />
 
 		<param name="track_file_input_path_for_test_simulate" value="" />
 		<param name="track_file_simulate_freq" value="2" />

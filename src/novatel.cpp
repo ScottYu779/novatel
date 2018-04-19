@@ -1320,7 +1320,7 @@ void Novatel::ReadSerialPort()
             cout << "len is " << len << endl;
         }
 
-        //BufferIncomingData(buffer, len);
+        BufferIncomingData(buffer, len);
     }
 }
 

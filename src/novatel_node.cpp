@@ -530,7 +530,13 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   time(&current_time);
   local_time = localtime(&current_time);
   gettimeofday(&tv, &tz);
-
+  static int need_show_zero_lat_long = 1;
+  
+  if (need_show_zero_lat_long)
+  {
+    need_show_zero_lat_long = 0;
+    cout << setprecision(10) << "lat @ start point:" << ins_pva.latitude << " long @ start point:"<<ins_pva.longitude << endl;
+  }
   //real time convert the locate data
   gps_.ConvertLLaUTM(ins_pva.latitude, ins_pva.longitude, &northing, &easting, &zoneNum, &north);
 
@@ -604,6 +610,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
                      << gps_data_ht_.heading << " "
                      << endl;
     }
+    cout << "saving xyd to file" << NovatelNode::track_file_output_path_xy_hd_.c_str() << endl;
   }
   std::cout << "["
             << local_time->tm_year + 1900 << "-"
