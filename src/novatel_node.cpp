@@ -74,9 +74,7 @@ static double degrees_square_to_radians_square = degrees_to_radians * degrees_to
 
 static double sigma_v = 0.05; // velocity std dev in m/s
 
-
 int NovatelNode::track_file_simulate_freq_ = 10; //1hz
-
 
 NovatelNode::NovatelNode() : nh_("~")
 {
@@ -172,7 +170,7 @@ void NovatelNode::send_rest_locate_data_frq_func()
     cout << "num " << track_data_temp.num << " x " << track_data_temp.x << " y " << track_data_temp.y << endl;
     if (x_zero_simulate >= 0.0)
     {
-      if (fabs(sqrt(pow(track_data_temp.x,2) + pow(track_data_temp.y,2))) >= th_zero)
+      if (fabs(sqrt(pow(track_data_temp.x, 2) + pow(track_data_temp.y, 2))) >= th_zero)
       {
         x_zero_simulate = track_data_temp.x;
         y_zero_simulate = track_data_temp.y;
@@ -180,11 +178,11 @@ void NovatelNode::send_rest_locate_data_frq_func()
         cout << "zero track_data_temp.y" << track_data_temp.y << endl;
       }
       else
-        x_zero_simulate = -1.0;//判断一次即可
+        x_zero_simulate = -1.0; //判断一次即可
     }
     track_datas_t.push_back(track_data_temp);
   }
-  
+
   cout << "track_datas_t size is:" << track_datas_t.size() << endl;
 
   double num = 2;
@@ -195,32 +193,35 @@ void NovatelNode::send_rest_locate_data_frq_func()
       //只保留小数点后num个位数
       gps_data_ht_.odom.pose.pose.position.x =
           ((float)((int)((
-                        (it->x - x_zero_simulate)  //被转换的数据或者表达式放在这里
-                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+                             (it->x - x_zero_simulate) //被转换的数据或者表达式放在这里
+                             + (5 / pow(10, num))) *
+                         pow(10, num)))) /
+          pow(10, num);
       gps_data_ht_.odom.pose.pose.position.y =
           ((float)((int)((
-                        (it->y - y_zero_simulate)   //被转换的数据或者表达式放在这里
-                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+                             (it->y - y_zero_simulate) //被转换的数据或者表达式放在这里
+                             + (5 / pow(10, num))) *
+                         pow(10, num)))) /
+          pow(10, num);
       gps_data_ht_.heading =
           ((float)((int)((
-                        (it->h)   //被转换的数据或者表达式放在这里
-                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+                             (it->h) //被转换的数据或者表达式放在这里
+                             + (5 / pow(10, num))) *
+                         pow(10, num)))) /
+          pow(10, num);
 
-      // cout << "simulate publishing" 
-      //         << " x: " << gps_data_ht_.odom.pose.pose.position.x 
-      //         << " y: " << gps_data_ht_.odom.pose.pose.position.y 
+      // cout << "simulate publishing"
+      //         << " x: " << gps_data_ht_.odom.pose.pose.position.x
+      //         << " y: " << gps_data_ht_.odom.pose.pose.position.y
       //         << endl;
 
-      ROS_INFO_STREAM("simulate publishing" 
-
-              << " num: " << it->num<< endl
-              << " y_zero: " << y_zero_simulate<< endl
-              << " x: " << gps_data_ht_.odom.pose.pose.position.x << endl
-              << " y: " << gps_data_ht_.odom.pose.pose.position.y<< endl
-              << " h: " << gps_data_ht_.heading<< endl);
+      ROS_INFO_STREAM("simulate pubing"
+                      << " x: " << gps_data_ht_.odom.pose.pose.position.x << endl
+                      << " y: " << gps_data_ht_.odom.pose.pose.position.y << endl
+                      << " h: " << gps_data_ht_.heading << endl);
 
       exhibition_odom_publisher_.publish(gps_data_ht_);
-      usleep(100*1000); //fucn sleep uinit is: 1 sec
+      usleep(100 * 1000); //fucn sleep uinit is: 1 sec
       //ussleep(1); //fucn sleep uinit is: 1 sec
     }
   }
@@ -432,20 +433,19 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   time(&current_time);
   local_time = localtime(&current_time);
   gettimeofday(&tv, &tz);
-  double num = 2; 
+  double num = 2;
   gps_data_ht_.heading = sqrt(pow(cur_odom_.twist.twist.angular.x, 2) + pow(cur_odom_.twist.twist.angular.y, 2));
   gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
   gps_data_ht_.velocity =
-          ((float)((int)((
-                        (gps_data_ht_.velocity) 
-                         + (5 / pow(10, num))) * pow(10, num)))) / pow(10, num);
+      ((float)((int)((
+                         (gps_data_ht_.velocity) + (5 / pow(10, num))) *
+                     pow(10, num)))) /
+      pow(10, num);
 
   gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
   gps_data_ht_.odom.pose.pose.position.y = cur_odom_.pose.pose.position.y - Novatel::y_zero;
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
-
-  
 
   //#####################
 
@@ -470,12 +470,12 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
       cout << "open fiile fail" << endl;
     }
     else
-      track_file_out  << setprecision(2) 
-                      << track_point_cnt++ << " " 
-                      << gps_data_ht_.odom.pose.pose.position.x << " " 
-                      << gps_data_ht_.odom.pose.pose.position.y << " " 
-                      << gps_data_ht_.velocity << " " 
-                      << endl;
+      track_file_out << setprecision(2)
+                     << track_point_cnt++ << " "
+                     << gps_data_ht_.odom.pose.pose.position.x << " "
+                     << gps_data_ht_.odom.pose.pose.position.y << " "
+                     << gps_data_ht_.velocity << " "
+                     << endl;
 
     std::cout << local_time->tm_year + 1900 << "-"
               << local_time->tm_mon + 1 << "-"
@@ -495,22 +495,22 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
   else
   {
     std::cout << "["
-            << local_time->tm_year + 1900 << "-"
-            << local_time->tm_mon + 1 << "-"
-            << local_time->tm_mday << " "
-            << local_time->tm_hour << ":"
-            << local_time->tm_min << ":"
-            << local_time->tm_sec << "."
-            << tv.tv_usec << "]"<< endl
-            << "utm pubing, "
-            << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
-            << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
-            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
-            << " [hd]:" << gps_data_ht_.heading
-            << " [v]:" << gps_data_ht_.velocity
-            << " [xz]:" << Novatel::x_zero << ","
-            << " [yz]:" << Novatel::y_zero << ","
-            << std::endl;
+              << local_time->tm_year + 1900 << "-"
+              << local_time->tm_mon + 1 << "-"
+              << local_time->tm_mday << " "
+              << local_time->tm_hour << ":"
+              << local_time->tm_min << ":"
+              << local_time->tm_sec << "."
+              << tv.tv_usec << "]" << endl
+              << "utm pubing, "
+              << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
+              << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
+              << " [z]:" << gps_data_ht_.odom.pose.pose.position.z
+              << " [hd]:" << gps_data_ht_.heading   //heading
+              << " [v]:" << gps_data_ht_.velocity   //velocity
+              << " [xz]:" << Novatel::x_zero << "," //x zero
+              << " [yz]:" << Novatel::y_zero << "," //y zero
+              << std::endl;
   }
 }
 
@@ -573,6 +573,12 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
 
   gps_data_ht_.heading = cur_odom_.twist.twist.angular.z;
   gps_data_ht_.velocity = sqrt(pow(cur_odom_.twist.twist.linear.x, 2) + pow(cur_odom_.twist.twist.linear.y, 2));
+  double num = 2;
+  gps_data_ht_.velocity =
+      ((float)((int)((
+                         (gps_data_ht_.velocity) + (5 / pow(10, num))) *
+                     pow(10, num)))) /
+      pow(10, num);
   gps_data_ht_.odom.pose.pose.position.x = cur_odom_.pose.pose.position.x - Novatel::x_zero;
   gps_data_ht_.odom.pose.pose.position.y = cur_odom_.pose.pose.position.y - Novatel::y_zero;
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
@@ -611,10 +617,10 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
-            << " [hd]:" << gps_data_ht_.heading << ","
-            << " [v]:" << gps_data_ht_.velocity << ","
-            << " [xz]:" << Novatel::x_zero << ","
-            << " [yz]:" << Novatel::y_zero << ","
+            << " [hd]:" << gps_data_ht_.heading << "," //heading
+            << " [v]:" << gps_data_ht_.velocity << "," //velocity
+            << " [xz]:" << Novatel::x_zero << ","      //x zero
+            << " [yz]:" << Novatel::y_zero << ","      //y zero
             << std::endl;
 
   // TODO: add covariance
@@ -724,8 +730,6 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": height_zero: " << Novatel::z_zero);
   }
 
-  
-
   nh_.param("ori_track_file_path", ori_track_file_path_, std::string(""));
   if (ori_track_file_path_ != "")
   {
@@ -748,7 +752,6 @@ bool NovatelNode::getParameters()
     CODE_STATE = test_catch_track_file_only_xyv_;
     log_commands_ = "bestutmb ontime 0.1; bestvelb ontime 0.1";
   }
-
 
   nh_.param("track_file_output_path_xy_hd", track_file_output_path_xy_hd_, std::string(""));
   if (track_file_output_path_xy_hd_ != "")

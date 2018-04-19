@@ -1316,10 +1316,11 @@ void Novatel::ReadSerialPort()
         // add data to the buffer to be parsed
         if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
         {
-            log_info_("income data");
+            log_info_("incoming data");
+            cout << "len is " << len << endl;
         }
 
-        BufferIncomingData(buffer, len);
+        //BufferIncomingData(buffer, len);
     }
 }
 

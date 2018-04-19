@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-[TOC]
-
-Driver For Novatel GPS
-==================
 
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
 
@@ -263,4 +258,3 @@ Scott Yu <hongsong.yu2010@gmail.com>
 =======
 # novatel
 driver for novatel oem6
->>>>>>> fce4cfdb568bf61c4ddaf7a483bf1205a7757a9f
