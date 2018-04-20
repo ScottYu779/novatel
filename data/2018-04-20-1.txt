@@ -1,0 +1,340 @@
+in main
+[0m[ INFO] [1524205256.566615465]: /novatel_node: Odom Topic: /gps_odom[0m
+[0m[ INFO] [1524205256.567239836]: /novatel_node: Exhibition Odom Topic: /gps_odom_exhibition[0m
+[0m[ INFO] [1524205256.568419233]: /novatel_node: serial Port: /dev/ttyS0[0m
+[0m[ INFO] [1524205256.569355802]: /novatel_node: Baudrate: 115200[0m
+[0m[ INFO] [1524205256.569923875]: /novatel_node: Log Commands: inspvab ontime 0.1[0m
+[0m[ INFO] [1524205256.571076931]: /novatel_node: latitude_zero: 34.3996[0m
+[0m[ INFO] [1524205256.571646186]: /novatel_node: longitude_zero: 117.471[0m
+get x_zero and y_zero by longitude_zero and longitude_zero
+[0m[ INFO] [1524205256.572235734]: /novatel_node: height_zero: 49.7905[0m
+[0m[ INFO] [1524205256.575718850]: /novatel_node: track_file_simulate_freq_: 2[0m
+  latitude_zero: 34.3996
+  longitude_zero: 117.471
+  x_zero: 543334
+  y_zero: 3.80656e+06
+
+[0m[ INFO] [1524205256.577196826]: Serial port: /dev/ttyS0 opened successfully.
+[0m
+send:unlogall
+[0m[ INFO] [1524205257.577436058]: Searching for Novatel receiver...
+[0m
+[0m[ INFO] [1524205258.105945944]: Found Novatel receiver.
+	Model: "D2JRPRTTNS3"
+	Serial Number: "BMAW15030118E"
+	Hardware version: "OEM638-1.03"
+	Software version: "OMP060631RN0000"
+
+Receiver capabilities:
+	L2: -
+	Raw measurements: -
+	RTK: +
+	SPAN: +
+	GLONASS: -
+[0m
+[0m[ INFO] [1524205258.106274902]: LOG inspvab ontime 0.1
+[0m
+[0m[ INFO] [1524205258.106349212]: Started read thread.[0m
+[0m[ INFO] [1524205258.136467826]: RECEIVED AN ACK.[0m
+[0m[ INFO] [1524205258.136585680]: Ack received for requested log: inspvab ontime 0.1[0m
+lat @ start point:34.39958111 long @ start point:117.471473
+[2018-4-20 14:20:58.376141]inspva pubing, 
+ [x]:0.7925423554,
+ [y]:1.318374076,
+ [z]:42.12371424,
+ [hd]:213.5813843,
+ [v]:0.11,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.475872]inspva pubing, 
+ [x]:0.7920873987,
+ [y]:1.317620042,
+ [z]:42.12492885,
+ [hd]:213.5687971,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.575640]inspva pubing, 
+ [x]:0.7919323507,
+ [y]:1.31713006,
+ [z]:42.12531952,
+ [hd]:213.5683087,
+ [v]:0.09,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.675791]inspva pubing, 
+ [x]:0.7915539752,
+ [y]:1.316257627,
+ [z]:42.12572758,
+ [hd]:213.5648286,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.775782]inspva pubing, 
+ [x]:0.7910556365,
+ [y]:1.315423696,
+ [z]:42.12563552,
+ [hd]:213.5699792,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.876284]inspva pubing, 
+ [x]:0.7908081285,
+ [y]:1.314781159,
+ [z]:42.1257154,
+ [hd]:213.5702223,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:58.976081]inspva pubing, 
+ [x]:0.7903766535,
+ [y]:1.314097452,
+ [z]:42.1265742,
+ [hd]:213.5784894,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.75656]inspva pubing, 
+ [x]:0.7898886666,
+ [y]:1.313332348,
+ [z]:42.12753466,
+ [hd]:213.5740868,
+ [v]:0.1,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.176217]inspva pubing, 
+ [x]:0.7897433059,
+ [y]:1.312731148,
+ [z]:42.1271064,
+ [hd]:213.5743743,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.275652]inspva pubing, 
+ [x]:0.7892239495,
+ [y]:1.311817077,
+ [z]:42.12632768,
+ [hd]:213.5723819,
+ [v]:0.15,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.376244]inspva pubing, 
+ [x]:0.7889186923,
+ [y]:1.311259718,
+ [z]:42.12688545,
+ [hd]:213.5814441,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.475935]inspva pubing, 
+ [x]:0.7887908224,
+ [y]:1.310897626,
+ [z]:42.12771714,
+ [hd]:213.5680595,
+ [v]:0.09,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.575843]inspva pubing, 
+ [x]:0.7885600225,
+ [y]:1.310319513,
+ [z]:42.12782465,
+ [hd]:213.5688229,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.675764]inspva pubing, 
+ [x]:0.7882695333,
+ [y]:1.309757358,
+ [z]:42.12745781,
+ [hd]:213.569956,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.775802]inspva pubing, 
+ [x]:0.7881744533,
+ [y]:1.309316195,
+ [z]:42.12751422,
+ [hd]:213.5630977,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.876395]inspva pubing, 
+ [x]:0.7879047618,
+ [y]:1.308732102,
+ [z]:42.12795934,
+ [hd]:213.5714899,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:20:59.975684]inspva pubing, 
+ [x]:0.7795714681,
+ [y]:1.294145194,
+ [z]:42.13806407,
+ [hd]:213.564871,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.75688]inspva pubing, 
+ [x]:0.7844070423,
+ [y]:1.297817303,
+ [z]:42.1136899,
+ [hd]:213.5710876,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.175504]inspva pubing, 
+ [x]:0.7823589006,
+ [y]:1.297252764,
+ [z]:42.1094592,
+ [hd]:213.5904642,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.276187]inspva pubing, 
+ [x]:0.7815814217,
+ [y]:1.301755833,
+ [z]:42.14001798,
+ [hd]:213.5622395,
+ [v]:0.07,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.376185]inspva pubing, 
+ [x]:0.7871004046,
+ [y]:1.305838923,
+ [z]:42.14676171,
+ [hd]:213.5616677,
+ [v]:0.1,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.475952]inspva pubing, 
+ [x]:0.7799444402,
+ [y]:1.297461184,
+ [z]:42.10859496,
+ [hd]:213.5730579,
+ [v]:0.1,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.576249]inspva pubing, 
+ [x]:0.782374909,
+ [y]:1.302435394,
+ [z]:42.10910513,
+ [hd]:213.5855843,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.675932]inspva pubing, 
+ [x]:0.7891746179,
+ [y]:1.308682535,
+ [z]:42.14071721,
+ [hd]:213.5735566,
+ [v]:0.11,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.775677]inspva pubing, 
+ [x]:0.785201753,
+ [y]:1.306405994,
+ [z]:42.1437395,
+ [hd]:213.5636706,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.876276]inspva pubing, 
+ [x]:0.7832954638,
+ [y]:1.305651349,
+ [z]:42.10907546,
+ [hd]:213.5820993,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:0.975974]inspva pubing, 
+ [x]:0.7852398928,
+ [y]:1.309493954,
+ [z]:42.10358836,
+ [hd]:213.5675702,
+ [v]:0.06,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+[2018-4-20 14:21:1.75584]inspva pubing, 
+ [x]:0.7791853247,
+ [y]:1.308527355,
+ [z]:42.13068256,
+ [hd]:213.5617244,
+ [v]:0.08,
+ [xz]:543333.9687,
+ [yz]:3806561.595,
+
+... logging to /home/rlc/.ros/log/fc1209ac-4462-11e8-ac09-cb8a40f8521f/roslaunch-neousys-Nuvo-5100VTC-3315.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/rlc/yuhs_ws/src/novatel/launch/novatel.launch
+[1mstarted roslaunch server http://neousys-Nuvo-5100VTC:45589/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /novatel_node/baudrate: 115200
+ * /novatel_node/configure_port: 
+ * /novatel_node/gps_default_logs_period: 0.05
+ * /novatel_node/height_zero: 49.7905
+ * /novatel_node/latitude_zero: 34.39956925
+ * /novatel_node/log_commands: inspvab ontime 0.1
+ * /novatel_node/longitude_zero: 117.4714643
+ * /novatel_node/odom_topic: /gps_odom
+ * /novatel_node/ori_track_file_path: 
+ * /novatel_node/port: /dev/ttyS0
+ * /novatel_node/span_default_logs_period: 0.0
+ * /novatel_node/track_file_input_path_for_test_simulate: 
+ * /novatel_node/track_file_output_path_xy: 
+ * /novatel_node/track_file_output_path_xy_hd: 
+ * /novatel_node/track_file_output_path_xyv: 
+ * /novatel_node/track_file_simulate_freq: 2
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.12
+
+NODES
+  /
+    novatel_node (novatel/novatel_node)
+
+auto-starting new master
+[1mprocess[master]: started with pid [3326][0m
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/rlc/yuhs_ws/src/novatel/launch/novatel.launch http://localhost:11311
+[1msetting /run_id to fc1209ac-4462-11e8-ac09-cb8a40f8521f[0m
+[1mprocess[rosout-1]: started with pid [3339][0m
+started core service [/rosout]
+[1mprocess[novatel_node-2]: started with pid [3342][0m
+[novatel_node-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

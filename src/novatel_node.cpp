@@ -484,7 +484,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
               << local_time->tm_min << ":"
               << local_time->tm_sec << "."
               << tv.tv_usec << "," << std::endl
-
+	      << setprecision(4)
               << "  x_zero: " << Novatel::x_zero << std::endl
               << "  y_zero: " << Novatel::y_zero << std::endl
               << "  x: " << gps_data_ht_.odom.pose.pose.position.x << std::endl
@@ -621,13 +621,14 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
             << "inspva pubing, " << endl
-            << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << "," << endl
-            << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << "," << endl
-            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << "," << endl
-            << " [hd]:" << gps_data_ht_.heading << "," << endl //heading
-            << " [v]:" << gps_data_ht_.velocity << "," << endl //velocity
-            << " [xz]:" << Novatel::x_zero << "," << endl      //x zero
-            << " [yz]:" << Novatel::y_zero << "," << endl      //y zero
+	    << setprecision(4)
+            << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
+            << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
+            << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
+            << " [hd]:" << gps_data_ht_.heading << ","		//heading
+            << " [v]:" << gps_data_ht_.velocity << ","	 	//velocity
+            << " [xz]:" << Novatel::x_zero << ","	     	//x zero
+            << " [yz]:" << Novatel::y_zero << ","	      	//y zero
             << std::endl;
 
   // TODO: add covariance
