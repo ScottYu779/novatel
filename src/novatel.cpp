@@ -1297,7 +1297,7 @@ void Novatel::ReadSerialPort()
         try
         {
             // read data
-            len = serial_port_->read(buffer, MAX_NOUT_SIZE);
+            len = serial_port_->read(buffer, 256);
         }
         catch (std::exception &e)
         {

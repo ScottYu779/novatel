@@ -25,7 +25,7 @@
 		<param name="track_file_output_path_xy" value="" />
 		<param name="track_file_output_path_xyv" value="" />
 		<!-- <param name="track_file_output_path_xyv" value="/home/rlc/yuhs_ws/record_data/track_xyv_1.txt" /> -->
-		<param name="track_file_output_path_xy_hd" value="/home/rlc/yuhs_ws/src/novatel/data/4-19/xyd-1.txt" />
+		<param name="track_file_output_path_xy_hd" value="/home/rlc/yuhs_ws/src/novatel/data/track/2.txt" />
 
 		<param name="track_file_input_path_for_test_simulate" value="" />
 		<param name="track_file_simulate_freq" value="2" />
