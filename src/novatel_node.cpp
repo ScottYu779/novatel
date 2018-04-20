@@ -99,9 +99,10 @@ NovatelNode::~NovatelNode()
   this->disconnect();
 }
 
-std::string NovatelNode::track_file_output_path_xy_ = "";
-std::string NovatelNode::track_file_output_path_xyv_ = "";
-std::string NovatelNode::track_file_output_path_xy_hd_ = "";
+std::string NovatelNode::file_xy_fd_path = "";
+std::string NovatelNode::file_xyv_fd_path = "";
+std::string NovatelNode::file_xyh_fd_path = "";
+std::string NovatelNode::file_precision_fd_path = "";
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
 {
@@ -449,7 +450,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
 
   //#####################
 
-  if (CODE_STATE == test_catch_track_file_only_xyv_)
+  if (CODE_STATE == file_xyv_state)
   {
     static int track_point_cnt = 0;
     struct tm *local_time;
@@ -462,7 +463,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
 
     //cost 5us
 
-    std::ofstream track_file_out(NovatelNode::track_file_output_path_xyv_.c_str(), ios::app | ios::out);
+    std::ofstream track_file_out(NovatelNode::file_xyv_fd_path.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
     if (!track_file_out.is_open())
@@ -590,27 +591,59 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
-  if (CODE_STATE == test_catch_track_file_xy_hd_)
+  if ((test_out_file_min_ <= CODE_STATE) && (CODE_STATE <= test_out_file_max_))
   {
+    string  path_temp;
     static int track_point_cnt = 0;
-
-    std::ofstream track_file_out(NovatelNode::track_file_output_path_xy_hd_.c_str(), ios::app | ios::out);
+    if (CODE_STATE == file_precision_state)
+    {
+      //std::ofstream track_file_out(NovatelNode::file_precision_fd_path.c_str(), ios::app | ios::out);  
+      path_temp = NovatelNode::file_precision_fd_path;
+    }
+    
+    if (CODE_STATE == file_xyh_state)
+    {
+      //std::ofstream track_file_out(NovatelNode::file_xyh_fd_path.c_str(), ios::app | ios::out);
+      path_temp = NovatelNode::file_xyh_fd_path;
+    }
+    
+    if (CODE_STATE == file_xy_state)
+    {
+      path_temp = NovatelNode::file_xy_fd_path;
+    }
+    
+    std::ofstream track_file_out(path_temp.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
     if (!track_file_out.is_open())
     {
-      cout << "open track_file_out:" << track_file_output_path_xy_hd_ << " failed!!!" << endl;
+      cout << "open track_file_out:" << path_temp << " failed!!!" << endl;
     }
     else
     {
-      track_file_out << setprecision(2)
-                     << track_point_cnt++ << " "
-                     << gps_data_ht_.odom.pose.pose.position.x << " "
-                     << gps_data_ht_.odom.pose.pose.position.y << " "
-                     << gps_data_ht_.heading << " "
-                     << endl;
+      if (CODE_STATE == file_precision_state)
+      {
+        track_file_out
+            << setprecision(2)
+            << ins_pva.latitude << " "
+            << gps_data_ht_.odom.pose.pose.position.x << " "
+            << ins_pva.longitude << " "
+            << gps_data_ht_.odom.pose.pose.position.y << " "
+            << endl;
+      }
+
+      if (CODE_STATE == file_xyh_state)
+      {
+        track_file_out
+            << setprecision(2)
+            << track_point_cnt++ << " "
+            << gps_data_ht_.odom.pose.pose.position.x << " "
+            << gps_data_ht_.odom.pose.pose.position.y << " "
+            << gps_data_ht_.heading << " "
+            << endl;
+      }
+      cout << "saving data file" << path_temp.c_str() << endl;
     }
-    cout << "saving xyd to file" << NovatelNode::track_file_output_path_xy_hd_.c_str() << endl;
   }
   std::cout << "["
             << local_time->tm_year + 1900 << "-"
@@ -745,28 +778,36 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": ori_track_file_path_: " << ori_track_file_path_);
   }
 
-  nh_.param("track_file_output_path_xy", track_file_output_path_xy_, std::string(""));
-  if (track_file_output_path_xy_ != "")
+  nh_.param("file_xy_path", file_xy_fd_path, std::string(""));
+  if (file_xy_fd_path != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_: " << track_file_output_path_xy_);
-    CODE_STATE = test_catch_track_file_only_xy_;
+    ROS_INFO_STREAM(name_ << ": file_xy_fd_path: " << file_xy_fd_path);
+    CODE_STATE = file_xy_state;
     log_commands_ = "bestposb ontime 0.1";
   }
 
-  nh_.param("track_file_output_path_xyv", track_file_output_path_xyv_, std::string(""));
-  if (track_file_output_path_xyv_ != "")
+  nh_.param("file_xyv_path", file_xyv_fd_path, std::string(""));
+  if (file_xyv_fd_path != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_output_path_xyv: " << track_file_output_path_xyv_);
-    CODE_STATE = test_catch_track_file_only_xyv_;
+    ROS_INFO_STREAM(name_ << ": file_xyv_path: " << file_xyv_fd_path);
+    CODE_STATE = file_xyv_state;
     log_commands_ = "bestutmb ontime 0.1; bestvelb ontime 0.1";
   }
 
-  nh_.param("track_file_output_path_xy_hd", track_file_output_path_xy_hd_, std::string(""));
-  if (track_file_output_path_xy_hd_ != "")
+  nh_.param("file_xyh_path", file_xyh_fd_path, std::string(""));
+  if (file_xyh_fd_path != "")
   {
-    ROS_INFO_STREAM(name_ << ": track_file_output_path_xy_hd_: " << track_file_output_path_xy_hd_);
-    CODE_STATE = test_catch_track_file_xy_hd_;
+    ROS_INFO_STREAM(name_ << ": file_xyh_fd_path: " << file_xyh_fd_path);
+    CODE_STATE = file_xyh_state;
     log_commands_ = "inspvab ontime 0.1";
+  }
+
+  nh_.param("file_precision_path", file_precision_fd_path, std::string(""));
+  if (file_precision_fd_path != "")
+  {
+    ROS_INFO_STREAM(name_ << ": file_precision_fd_path: " << file_precision_fd_path);
+    CODE_STATE = file_precision_state;
+    log_commands_ = "inspvab ontime 1";
   }
 
   nh_.param("track_file_input_path_for_test_simulate", track_file_input_path_for_test_simulate_, std::string(""));

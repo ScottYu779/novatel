@@ -145,7 +145,7 @@ inline void DefaultErrorMsgCallback(const std::string &msg)
 //BESTPOSB_LOG_TYPE
 inline void DefaultBestPositionCallback(Position best_position, double time_stamp)
 {
-    if (NovatelNode::track_file_output_path_xy_ != "")
+    if (NovatelNode::file_xy_fd_path != "")
     {
         static int track_point_cnt = 0;
         struct tm *local_time;
@@ -163,7 +163,7 @@ inline void DefaultBestPositionCallback(Position best_position, double time_stam
         novatel::Novatel::ConvertLLaUTM(best_position.latitude, best_position.longitude, &y, &x,
                                         &Novatel::zoneNum, &Novatel::north);
 
-        std::ofstream track_file_out(NovatelNode::track_file_output_path_xy_.c_str(), ios::app | ios::out);
+        std::ofstream track_file_out(NovatelNode::file_xy_fd_path.c_str(), ios::app | ios::out);
         track_file_out.setf(std::ios::fixed, ios::floatfield);
         //track_file_out.precision(5);
         if (!track_file_out.is_open())
@@ -173,7 +173,7 @@ inline void DefaultBestPositionCallback(Position best_position, double time_stam
         else
             track_file_out << setprecision(2) << track_point_cnt++ << " " << (x - Novatel::x_zero) << " " << (y - Novatel::y_zero) << endl;
 
-        if (CODE_STATE == test_catch_track_file_only_xy_)
+        if (CODE_STATE == file_xy_state)
         {
             std::cout << local_time->tm_year + 1900 << "-"
                       << local_time->tm_mon + 1 << "-"

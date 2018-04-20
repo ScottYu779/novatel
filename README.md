@@ -39,7 +39,7 @@ roslaunch novatel novatel.launch
 ## 采集轨迹数据
 设置 launch/novatel.launch里边的
 <param name="track_file_output_path_only_xy" value="" />
-<param name="track_file_output_path_xy_hd" value="" />
+<param name="file_xyh_path" value="" />
 的路径信息，即可完成采集相应的轨迹数据
 1，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y
 2，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y heading
@@ -143,6 +143,7 @@ log inspvaa ontime 1
 log inspvab ontime 1
 log version
 unlogall
+log inspvaxa ontime 1
 
 
 
