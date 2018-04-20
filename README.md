@@ -1,6 +1,19 @@
 
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
 
+
+# usage for user
+## run novatel_node
+cd ~/yuhs_ws
+catkin_make -DCATKIN_WHITELIST_PACKAGES="novatel"
+source ~/novatel_ws/devel/setup.bash
+roslaunch novatel novatel.launch
+
+cd ~/catkin_ws
+catkin_make
+roslaunch novatel novatel.launch
+
+
 # log
 ## update log
 2018-03-28 15:11:58 [author]scott yu,[log]init proj for huituo
@@ -22,13 +35,6 @@ This project provides a cross-platform interface for the Novatel OEM4 and OEMV s
 				DEPENDS Boost
 			)
 	如果是系统自带的package，是直接可以findpackage找到的，不是系统环境变量中的，需要这么操作
-
-# usage for user
-## run novatel_node
-source ~/novatel_ws/devel/setup.bash
-cd ~/catkin_ws
-catkin_make
-roslaunch novatel novatel.launch
 
 ## 采集轨迹数据
 设置 launch/novatel.launch里边的
@@ -124,7 +130,7 @@ freset
 com com2 115200 n 8 1 n off on
 interfacemode com2 rtca none off
 serialconfig com1 115200
-log com1 inspvasb ontime 0.1
+log com1 inspvab ontime 0.1
 log com1 imuratepvab onnew
 log insposb ontime 1
 saveconfig

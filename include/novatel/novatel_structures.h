@@ -44,7 +44,7 @@
 
 namespace novatel {
 
-#define MAX_NOUT_SIZE 8192 // Maximum size of a NovAtel log buffer (ALMANACA logs are big!)
+#define MAX_NOUT_SIZE 512 // Maximum size of a NovAtel log buffer (ALMANACA logs are big!)
 #define EPH_CHAN 33
 #define NUMSAT 14
 #define MAX_CHAN	54  // Maximum number of signal channels

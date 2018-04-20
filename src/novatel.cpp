@@ -1296,8 +1296,12 @@ void Novatel::ReadSerialPort()
     {
         try
         {
-            // read data
+            // try to read MAX_NOUT_SIZE bytes data into buf
             len = serial_port_->read(buffer, MAX_NOUT_SIZE);
+            if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
+            {
+                log_info_("try to read serial buf");
+            }
         }
         catch (std::exception &e)
         {
@@ -1314,13 +1318,26 @@ void Novatel::ReadSerialPort()
 
         //std::cout << read_timestamp_ <<  "  bytes: " << len << std::endl;
         // add data to the buffer to be parsed
-        if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
+        
+        if (len != 0)
         {
-            log_info_("incoming data");
-            cout << "len is " << len << endl;
+            if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
+            {
+                ostringstream ostr;
+                ostr << "recved buff size:" << MAX_NOUT_SIZE << "len is:" << len << endl;
+                string temp_str = ostr.str();
+                log_info_(temp_str);
+            }
+            BufferIncomingData(buffer, len);
         }
+        else
+        {
+            if ((CODE_STATE == team_debug_max_) || (CODE_STATE == solo_debug_max_))
+            {
+                //log_info_("len = 0");
+            }
 
-        BufferIncomingData(buffer, len);
+        }
     }
 }
 
