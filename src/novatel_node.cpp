@@ -484,7 +484,7 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
               << local_time->tm_min << ":"
               << local_time->tm_sec << "."
               << tv.tv_usec << "," << std::endl
-	      << setprecision(4)
+	      << setprecision(3)
               << "  x_zero: " << Novatel::x_zero << std::endl
               << "  y_zero: " << Novatel::y_zero << std::endl
               << "  x: " << gps_data_ht_.odom.pose.pose.position.x << std::endl
@@ -621,7 +621,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
             << "inspva pubing, " << endl
-	    << setprecision(4)
+	    << setprecision(3)
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
