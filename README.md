@@ -1,39 +1,39 @@
 <!-- TOC -->
 
 - [usage for user](#usage-for-user)
-	- [run novatel_node](#run-novatelnode)
+  - [run novatel_node](#run-novatel_node)
 - [log](#log)
-	- [update log](#update-log)
-	- [debug log](#debug-log)
-	- [采集轨迹数据](#%E9%87%87%E9%9B%86%E8%BD%A8%E8%BF%B9%E6%95%B0%E6%8D%AE)
-	- [read .gps file to output track file](#read-gps-file-to-output-track-file)
+  - [update log](#update-log)
+  - [debug log](#debug-log)
+  - [采集轨迹数据](#采集轨迹数据)
+  - [read .gps file to output track file](#read-gps-file-to-output-track-file)
 - [remote debug on ipc](#remote-debug-on-ipc)
-	- [ssh connect](#ssh-connect)
-	- [linux下串口调试助手简介](#linux%E4%B8%8B%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95%E5%8A%A9%E6%89%8B%E7%AE%80%E4%BB%8B)
-		- [minicom使用](#minicom%E4%BD%BF%E7%94%A8)
-		- [其他备选调试助手](#%E5%85%B6%E4%BB%96%E5%A4%87%E9%80%89%E8%B0%83%E8%AF%95%E5%8A%A9%E6%89%8B)
+  - [ssh connect](#ssh-connect)
+  - [linux下串口调试助手简介](#linux下串口调试助手简介)
+    - [minicom使用](#minicom使用)
+    - [其他备选调试助手](#其他备选调试助手)
 - [novatel](#novatel)
-	- [问题解决](#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3)
-	- [conf](#conf)
-		- [config the ipc](#config-the-ipc)
-		- [设置惯导基本参数](#%E8%AE%BE%E7%BD%AE%E6%83%AF%E5%AF%BC%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0)
-	- [info about novatel protocol](#info-about-novatel-protocol)
-		- [总体规则：](#%E6%80%BB%E4%BD%93%E8%A7%84%E5%88%99%EF%BC%9A)
-		- [config](#config)
-			- [cmd eg:](#cmd-eg)
-			- [config the mobile station for xcmg](#config-the-mobile-station-for-xcmg)
-				- [cmd list](#cmd-list)
-		- [方法论methodology](#%E6%96%B9%E6%B3%95%E8%AE%BAmethodology)
+  - [问题解决](#问题解决)
+  - [conf](#conf)
+    - [config the ipc](#config-the-ipc)
+    - [设置惯导基本参数](#设置惯导基本参数)
+  - [info about novatel protocol](#info-about-novatel-protocol)
+    - [总体规则：](#总体规则)
+    - [config](#config)
+      - [cmd eg:](#cmd-eg)
+      - [config the mobile station for xcmg](#config-the-mobile-station-for-xcmg)
+        - [cmd list](#cmd-list)
+        - [命令集合详细解释](#命令集合详细解释)
+    - [方法论methodology](#方法论methodology)
 - [Installation](#installation)
-	- [ROS Install](#ros-install)
-	- [Standalone Install](#standalone-install)
+  - [ROS Install](#ros-install)
+  - [Standalone Install](#standalone-install)
 - [Operation](#operation)
-	- [Callback Definitions](#callback-definitions)
-	- [Supported Messages](#supported-messages)
+  - [Callback Definitions](#callback-definitions)
+  - [Supported Messages](#supported-messages)
 - [License](#license)
 - [Authors](#authors)
-- [Scott Yu <hongsong.yu2010@gmail.com>](#scott-yu-hongsongyu2010gmailcom)
-- [novatel](#novatel)
+- [novatel](#novatel-1)
 
 <!-- /TOC -->
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
@@ -187,6 +187,7 @@ log inspvab ontime 1
 log version
 unlogall
 log inspvaxa ontime 1
+log bestposa ontime 1
 
 
 
