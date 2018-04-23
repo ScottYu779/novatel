@@ -1,4 +1,41 @@
+<!-- TOC -->
 
+- [usage for user](#usage-for-user)
+	- [run novatel_node](#run-novatelnode)
+- [log](#log)
+	- [update log](#update-log)
+	- [debug log](#debug-log)
+	- [采集轨迹数据](#%E9%87%87%E9%9B%86%E8%BD%A8%E8%BF%B9%E6%95%B0%E6%8D%AE)
+	- [read .gps file to output track file](#read-gps-file-to-output-track-file)
+- [remote debug on ipc](#remote-debug-on-ipc)
+	- [ssh connect](#ssh-connect)
+	- [linux下串口调试助手简介](#linux%E4%B8%8B%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95%E5%8A%A9%E6%89%8B%E7%AE%80%E4%BB%8B)
+		- [minicom使用](#minicom%E4%BD%BF%E7%94%A8)
+		- [其他备选调试助手](#%E5%85%B6%E4%BB%96%E5%A4%87%E9%80%89%E8%B0%83%E8%AF%95%E5%8A%A9%E6%89%8B)
+- [novatel](#novatel)
+	- [问题解决](#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3)
+	- [conf](#conf)
+		- [config the ipc](#config-the-ipc)
+		- [设置惯导基本参数](#%E8%AE%BE%E7%BD%AE%E6%83%AF%E5%AF%BC%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0)
+	- [info about novatel protocol](#info-about-novatel-protocol)
+		- [总体规则：](#%E6%80%BB%E4%BD%93%E8%A7%84%E5%88%99%EF%BC%9A)
+		- [config](#config)
+			- [cmd eg:](#cmd-eg)
+			- [config the mobile station for xcmg](#config-the-mobile-station-for-xcmg)
+				- [cmd list](#cmd-list)
+		- [方法论methodology](#%E6%96%B9%E6%B3%95%E8%AE%BAmethodology)
+- [Installation](#installation)
+	- [ROS Install](#ros-install)
+	- [Standalone Install](#standalone-install)
+- [Operation](#operation)
+	- [Callback Definitions](#callback-definitions)
+	- [Supported Messages](#supported-messages)
+- [License](#license)
+- [Authors](#authors)
+- [Scott Yu <hongsong.yu2010@gmail.com>](#scott-yu-hongsongyu2010gmailcom)
+- [novatel](#novatel)
+
+<!-- /TOC -->
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
 
 
@@ -95,12 +132,18 @@ gui com助手
 排查方法
 1、
 ## conf
-### config the pc
+### config the ipc
 get the Authentication of comm to usb
 sudo vim  /etc/udev/rules.d/70-tty.rules
 KERNEL=="ttyUSB[0-9]*",MODE=="0666"
 KERNEL=="ttyS[0-9]*",MODE=="0666"
 
+### 设置惯导基本参数
+gps主天线(ant1，车行驶方向前面的那个)相对于imu的偏移量
+
+x:0.95
+y:0.70
+z：1.62
 
 ## info about novatel protocol
 
@@ -108,13 +151,13 @@ KERNEL=="ttyS[0-9]*",MODE=="0666"
 
 
 ### 总体规则：
-	不区分大消息
-	那个命令里边 有的是 log psrposa ontime 1 有的是 log psrposb ontime 1
-		psrpos+a 或者+b 代表：一个ascall一个16进制
-			如下示例所示：
-			log命令a和B的格式分别如下：
-				a:输出的是#BEST****打头的字符串数据
-				b:以0xaa 0x44 0x12打头的二进制数据，跟我们软件保存的.gps格式的二进制数据是一致的
+- 不区分大消息
+- 那个命令里边 有的是 log psrposa ontime 1 有的是 log psrposb ontime 1
+-	psrpos+a 或者+b 代表：一个ascall一个16进制
+- 如下示例所示：
+	- log命令a和B的格式分别如下：
+	- a:输出的是#BEST****打头的字符串数据
+	- b:以0xaa 0x44 0x12打头的二进制数据，跟我们软件保存的.gps格式的二进制数据是一致的
 ### config 
 #### cmd eg:
 log version  //查看版本
