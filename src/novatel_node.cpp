@@ -588,46 +588,32 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   {
     string path_temp;
     static int track_point_cnt = 0;
-    if (CODE_STATE == file_precision_state)
-    {
-      //std::ofstream track_file_out(NovatelNode::file_precision_fd_path_.c_str(), ios::app | ios::out);
-      path_temp = NovatelNode::file_precision_fd_path_;
-    }
 
-    if (CODE_STATE == file_xyh_state)
-    {
-      //std::ofstream track_file_out(NovatelNode::file_xyh_fd_path.c_str(), ios::app | ios::out);
-      path_temp = NovatelNode::file_xyh_fd_path;
-    }
-
-    if (CODE_STATE == file_xy_state)
-    {
-      path_temp = NovatelNode::file_xy_fd_path;
-    }
-
-    std::ofstream track_file_out(path_temp.c_str(), ios::app | ios::out);
     track_file_out.setf(std::ios::fixed, ios::floatfield);
     //track_file_out.precision(5);
-    if (!track_file_out.is_open())
+    if (!track_file_out_.is_open())
     {
-      cout << "open track_file_out:" << path_temp << " failed!!!" << endl;
+      cout << "open track_file_out_:" << path_temp_ << " failed!!!" << endl;
     }
     else
     {
       if (CODE_STATE == file_precision_state)
       {
-        track_file_out
-            << setprecision(2)
+        track_file_out_
+            << setprecision(11)
             << ins_pva.latitude << " "
+            << setprecision(3)
             << gps_data_ht_.odom.pose.pose.position.x << " "
+            << setprecision(11)
             << ins_pva.longitude << " "
+            << setprecision(3)
             << gps_data_ht_.odom.pose.pose.position.y << " "
             << endl;
       }
 
       if (CODE_STATE == file_xyh_state)
       {
-        track_file_out
+        track_file_out_
             << setprecision(2)
             << track_point_cnt++ << " "
             << gps_data_ht_.odom.pose.pose.position.x << " "
@@ -635,7 +621,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << gps_data_ht_.heading << " "
             << endl;
       }
-      cout << "saving data file" << path_temp.c_str() << endl;
+      cout << "saving data file" << path_temp_.c_str() << endl;
     }
   }
   std::cout << "["
@@ -647,7 +633,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
             << "inspva pubing, " << endl
-            << setprecision(4)
+            << setprecision(3)
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
