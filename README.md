@@ -1,5 +1,55 @@
+<!-- TOC -->
 
+- [usage for user](#usage-for-user)
+  - [run novatel_node](#run-novatel_node)
+- [log](#log)
+  - [update log](#update-log)
+  - [debug log](#debug-log)
+  - [采集轨迹数据](#采集轨迹数据)
+  - [read .gps file to output track file](#read-gps-file-to-output-track-file)
+- [remote debug on ipc](#remote-debug-on-ipc)
+  - [ssh connect](#ssh-connect)
+  - [linux下串口调试助手简介](#linux下串口调试助手简介)
+    - [minicom使用](#minicom使用)
+    - [其他备选调试助手](#其他备选调试助手)
+- [novatel](#novatel)
+  - [问题解决](#问题解决)
+  - [conf](#conf)
+    - [config the ipc](#config-the-ipc)
+    - [设置惯导基本参数](#设置惯导基本参数)
+  - [info about novatel protocol](#info-about-novatel-protocol)
+    - [总体规则：](#总体规则)
+    - [config](#config)
+      - [cmd eg:](#cmd-eg)
+      - [config the mobile station for xcmg](#config-the-mobile-station-for-xcmg)
+        - [cmd list](#cmd-list)
+        - [命令集合详细解释](#命令集合详细解释)
+    - [方法论methodology](#方法论methodology)
+- [Installation](#installation)
+  - [ROS Install](#ros-install)
+  - [Standalone Install](#standalone-install)
+- [Operation](#operation)
+  - [Callback Definitions](#callback-definitions)
+  - [Supported Messages](#supported-messages)
+- [License](#license)
+- [Authors](#authors)
+- [novatel](#novatel-1)
+
+<!-- /TOC -->
 This project provides a cross-platform interface for the Novatel OEM4 and OEMV series of GPS receivers.  The Novatel SPAN system is also supported. 
+
+
+# usage for user
+## run novatel_node
+cd ~/yuhs_ws
+catkin_make -DCATKIN_WHITELIST_PACKAGES="novatel"
+source ~/novatel_ws/devel/setup.bash
+roslaunch novatel novatel.launch
+
+cd ~/catkin_ws
+catkin_make
+roslaunch novatel novatel.launch
+
 
 # log
 ## update log
@@ -23,17 +73,10 @@ This project provides a cross-platform interface for the Novatel OEM4 and OEMV s
 			)
 	如果是系统自带的package，是直接可以findpackage找到的，不是系统环境变量中的，需要这么操作
 
-# usage for user
-## run novatel_node
-source ~/novatel_ws/devel/setup.bash
-cd ~/catkin_ws
-catkin_make
-roslaunch novatel novatel.launch
-
 ## 采集轨迹数据
 设置 launch/novatel.launch里边的
 <param name="track_file_output_path_only_xy" value="" />
-<param name="track_file_output_path_xy_hd" value="" />
+<param name="file_xyh_path" value="" />
 的路径信息，即可完成采集相应的轨迹数据
 1，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y
 2，track_file_output_path_only_xy，采集的轨迹数据是 序号 x y heading
@@ -89,12 +132,18 @@ gui com助手
 排查方法
 1、
 ## conf
-### config the pc
+### config the ipc
 get the Authentication of comm to usb
 sudo vim  /etc/udev/rules.d/70-tty.rules
 KERNEL=="ttyUSB[0-9]*",MODE=="0666"
 KERNEL=="ttyS[0-9]*",MODE=="0666"
 
+### 设置惯导基本参数
+gps主天线(ant1，车行驶方向前面的那个)相对于imu的偏移量
+
+x:0.95
+y:0.70
+z：1.62
 
 ## info about novatel protocol
 
@@ -102,13 +151,13 @@ KERNEL=="ttyS[0-9]*",MODE=="0666"
 
 
 ### 总体规则：
-	不区分大消息
-	那个命令里边 有的是 log psrposa ontime 1 有的是 log psrposb ontime 1
-		psrpos+a 或者+b 代表：一个ascall一个16进制
-			如下示例所示：
-			log命令a和B的格式分别如下：
-				a:输出的是#BEST****打头的字符串数据
-				b:以0xaa 0x44 0x12打头的二进制数据，跟我们软件保存的.gps格式的二进制数据是一致的
+- 不区分大消息
+- 那个命令里边 有的是 log psrposa ontime 1 有的是 log psrposb ontime 1
+-	psrpos+a 或者+b 代表：一个ascall一个16进制
+- 如下示例所示：
+	- log命令a和B的格式分别如下：
+	- a:输出的是#BEST****打头的字符串数据
+	- b:以0xaa 0x44 0x12打头的二进制数据，跟我们软件保存的.gps格式的二进制数据是一致的
 ### config 
 #### cmd eg:
 log version  //查看版本
@@ -124,7 +173,7 @@ freset
 com com2 115200 n 8 1 n off on
 interfacemode com2 rtca none off
 serialconfig com1 115200
-log com1 inspvasb ontime 0.1
+log com1 inspvab ontime 0.1
 log com1 imuratepvab onnew
 log insposb ontime 1
 saveconfig
@@ -137,6 +186,8 @@ log inspvaa ontime 1
 log inspvab ontime 1
 log version
 unlogall
+log inspvaxa ontime 1
+log bestposa ontime 1
 
 
 

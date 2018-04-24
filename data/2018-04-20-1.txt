@@ -313,9 +313,9 @@ PARAMETERS
  * /novatel_node/port: /dev/ttyS0
  * /novatel_node/span_default_logs_period: 0.0
  * /novatel_node/track_file_input_path_for_test_simulate: 
- * /novatel_node/track_file_output_path_xy: 
- * /novatel_node/track_file_output_path_xy_hd: 
- * /novatel_node/track_file_output_path_xyv: 
+ * /novatel_node/file_xy_path: 
+ * /novatel_node/file_xyh_path: 
+ * /novatel_node/file_xyv_path: 
  * /novatel_node/track_file_simulate_freq: 2
  * /rosdistro: kinetic
  * /rosversion: 1.12.12
