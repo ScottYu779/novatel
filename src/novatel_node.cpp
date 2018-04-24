@@ -768,8 +768,8 @@ bool NovatelNode::getParameters()
   if (file_xyh_flag_ == 1)
   {
     ROS_INFO_STREAM(name_ << ": file_xyh_out_flag: " << file_xyh_flag_);
-    CODE_STATE = file_xyv_state;
-    log_commands_ = "bestutmb ontime 0.1; bestvelb ontime 0.1";
+    CODE_STATE = file_xyh_state;
+    log_commands_ = "inspvab ontime 0.1";
     time(&current_time_);
     local_time_ = localtime(&current_time_);
     stringstream ss;
@@ -796,13 +796,6 @@ bool NovatelNode::getParameters()
     }
   }
 
-  nh_.param("file_xyh_path", file_xyh_fd_path, std::string(""));
-  if (file_xyh_fd_path != "")
-  {
-    ROS_INFO_STREAM(name_ << ": file_xyh_fd_path: " << file_xyh_fd_path);
-    CODE_STATE = file_xyh_state;
-    log_commands_ = "inspvab ontime 0.1";
-  }
 
   nh_.param("file_precision_out_flag", file_precision_flag_, 0);
   if (file_precision_flag_ == 1)
