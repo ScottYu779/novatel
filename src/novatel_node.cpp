@@ -589,7 +589,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
     string path_temp;
     static int track_point_cnt = 0;
 
-    track_file_out.setf(std::ios::fixed, ios::floatfield);
+    
     //track_file_out.precision(5);
     if (!track_file_out_.is_open())
     {
