@@ -632,7 +632,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
             << "inspva pubing, " << endl
-            << setprecision(3)
+            << setprecision(3) 
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
