@@ -770,7 +770,6 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": file_xyh_out_flag: " << file_xyh_flag_);
     CODE_STATE = file_xyv_state;
     log_commands_ = "bestutmb ontime 0.1; bestvelb ontime 0.1";
-
     time(&current_time_);
     local_time_ = localtime(&current_time_);
     stringstream ss;
