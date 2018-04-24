@@ -1335,16 +1335,12 @@ void Novatel::ReadSerialPort()
                 (strstr((const char *)buffer, "INSPVAA") != NULL))
                 && (CODE_STATE == file_precision_state))
             {
-                cout << "catch inspvaxa" << endl;
-                char *p = "test";
                 string s;
                 s = (char *)buffer;
-                //s = p;
                 if (!NovatelNode::track_file_out_.is_open())
                 {
                     cout << "open path_temp_:" << NovatelNode::path_temp_ << " failed!!!" << endl;
                 }
-
                 NovatelNode::track_file_out_ << s << endl;
             }
             // else

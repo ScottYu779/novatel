@@ -105,7 +105,7 @@ std::string NovatelNode::file_xyv_fd_path = "";
 std::string NovatelNode::file_xyh_fd_path = "";
 int NovatelNode::file_precision_flag = 0;
 std::string NovatelNode::file_precision_fd_path_ = "";
-string NovatelNode::path_temp_ = "/";
+string NovatelNode::path_temp_ = "";
 std::ofstream NovatelNode::track_file_out_;
 
 
