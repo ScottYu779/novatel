@@ -1330,9 +1330,10 @@ void Novatel::ReadSerialPort()
                 log_info_(temp_str);
             }
             
-            if ((strstr((const char *)buffer, "INSPVAXA") != NULL) || 
+            if (((strstr((const char *)buffer, "INSPVAXA") != NULL) || 
                 (strstr((const char *)buffer, "BESTPOSA") != NULL) || 
                 (strstr((const char *)buffer, "INSPVAXA") != NULL))
+                && (CODE_STATE == file_precision_state))
             {
                 cout << "catch inspvaxa" << endl;
                 //NovatelNode::track_file_out_ << 
