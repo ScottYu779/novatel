@@ -614,7 +614,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
       if (CODE_STATE == file_xyh_state)
       {
         track_file_out_
-            << setprecision(2)
+            << setprecision(5)
             << track_point_cnt++ << " "
             << gps_data_ht_.odom.pose.pose.position.x << " "
             << gps_data_ht_.odom.pose.pose.position.y << " "
@@ -633,7 +633,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << local_time->tm_sec << "."
             << tv.tv_usec << "]"
             << "inspva pubing, " << endl
-            << setprecision(3)
+            << setprecision(5)
             << " [x]:" << gps_data_ht_.odom.pose.pose.position.x << ","
             << " [y]:" << gps_data_ht_.odom.pose.pose.position.y << ","
             << " [z]:" << gps_data_ht_.odom.pose.pose.position.z << ","
