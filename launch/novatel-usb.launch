@@ -26,7 +26,7 @@
 		<param name="file_xyv_path" value="" />
 		<!-- <param name="file_xyv_path" value="/home/rlc/yuhs_ws/record_data/track_xyv_1.txt" /> -->
 		<param name="file_xyh_path" value="" />
-		<param name="file_precision_path" value="/home/rlc/yuhs_ws/src/novatel/data/precision/1.txt" />
+		<param name="file_precision_out_flag" value="1" type="int"/>
 
 		<param name="track_file_input_path_for_test_simulate" value="" />
 		<param name="track_file_simulate_freq" value="2" />

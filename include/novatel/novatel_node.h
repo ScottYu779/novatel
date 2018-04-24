@@ -15,37 +15,37 @@ using namespace std;
 
 typedef enum
 {
-  release_state_ = 0,
+    release_state_ = 0,
   min_ = release_state_,
 
-      team_debug_on_car_,
-    team_debug_min_ = team_debug_on_car_,//范围控制边界
-  debug_min_ = team_debug_min_,//范围控制边界
-      team_debug_rtk_,
-      team_debug_single_gps_device_,
-    team_debug_max_ = team_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
-                                                      //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
+        team_debug_on_car_,
+      team_debug_min_ = team_debug_on_car_,//范围控制边界
+    debug_min_ = team_debug_min_,//范围控制边界
+        team_debug_rtk_,
+        team_debug_single_gps_device_,
+      team_debug_max_ = team_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
+                                                        //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
 
-      solo_debug_on_car_,
-    solo_debug_min_ = solo_debug_on_car_,//范围控制边界
-      solo_debug_rtk_,
-      solo_debug_single_gps_device_,
-    solo_debug_max_ = solo_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
-                                                      //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
-    ori_gps_file_convert_,      //特殊测试状态
-      
-      file_xyh_state,
-    test_out_file_min_ = file_xyh_state,
-      file_xy_state,
-      file_xyv_state,
-      file_precision_state,
-    test_out_file_max_ = file_precision_state,
+        solo_debug_on_car_,
+      solo_debug_min_ = solo_debug_on_car_,//范围控制边界
+        solo_debug_rtk_,
+        solo_debug_single_gps_device_,
+      solo_debug_max_ = solo_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
+                                                        //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
+        
+        file_xyh_state,
+      test_file_io_min_ = file_xyh_state,
+      ori_gps_file_convert_,      //特殊测试状态
+        file_xy_state,
+        file_xyv_state,
+        file_precision_state,
+      test_file_io_max_ = file_precision_state,
 
-      simulate_single_node_debug_,                 //不连接设备的调试
-    simulate_debug_min_ = simulate_single_node_debug_,//范围控制边界
-      simulate_multi_nodes_debug_,//多节点虚拟数据测试
-    simulate_debug_max_ = simulate_multi_nodes_debug_,//范围控制边界
-  debug_max_ = simulate_debug_max_,//调试阶段和非调试阶段的分界线
+        simulate_single_node_debug_,                 //不连接设备的调试
+      simulate_debug_min_ = simulate_single_node_debug_,//范围控制边界
+        simulate_multi_nodes_debug_,//多节点虚拟数据测试
+      simulate_debug_max_ = simulate_multi_nodes_debug_,//范围控制边界
+    debug_max_ = simulate_debug_max_,//调试阶段和非调试阶段的分界线
   
   max_ = debug_max_,
 }Debug_state;//调试节奏是从下往上
@@ -87,7 +87,14 @@ public://data
   static std::string file_xy_fd_path;
   static std::string file_xyv_fd_path;
   static std::string file_xyh_fd_path;
-  static std::string file_precision_fd_path;
+  static int file_precision_flag;
+  static std::string file_precision_fd_path_;
+  struct timeval tv_;
+  struct timezone tz_;
+  time_t current_time_;
+  struct tm *local_time_;
+  static std::ofstream track_file_out_;
+  static string path_temp_;
 
 protected:
   void send_rest_locate_data_frq_func();

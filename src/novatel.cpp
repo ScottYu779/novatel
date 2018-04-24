@@ -1,5 +1,6 @@
 #include "novatel/novatel.h"
 
+#include <string.h>
 #include <cmath>
 #include <iostream>
 #include <valarray>
@@ -1328,6 +1329,18 @@ void Novatel::ReadSerialPort()
                 string temp_str = ostr.str();
                 log_info_(temp_str);
             }
+            
+            if ((strstr((const char *)buffer, "INSPVAXA") != NULL) || 
+                (strstr((const char *)buffer, "BESTPOSA") != NULL) || 
+                (strstr((const char *)buffer, "INSPVAXA") != NULL))
+            {
+                cout << "catch inspvaxa" << endl;
+                //NovatelNode::track_file_out_ << 
+            }
+            // else
+            // {
+            //     BufferIncomingData(buffer, len);
+            // }
             BufferIncomingData(buffer, len);
         }
         else
