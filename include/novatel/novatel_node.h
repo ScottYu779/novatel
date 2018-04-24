@@ -85,9 +85,9 @@ public:
 public://data
   static int track_file_simulate_freq_;
   static std::string file_xy_fd_path;
-  static std::string file_xyv_fd_path;
+  static int file_xyh_flag_;
   static std::string file_xyh_fd_path;
-  static int file_precision_flag;
+  static int file_precision_flag_;
   static std::string file_precision_fd_path_;
   struct timeval tv_;
   struct timezone tz_;

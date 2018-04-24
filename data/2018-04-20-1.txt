@@ -315,7 +315,7 @@ PARAMETERS
  * /novatel_node/track_file_input_path_for_test_simulate: 
  * /novatel_node/file_xy_path: 
  * /novatel_node/file_xyh_path: 
- * /novatel_node/file_xyv_path: 
+ * /novatel_node/file_xyv_out_flag: 
  * /novatel_node/track_file_simulate_freq: 2
  * /rosdistro: kinetic
  * /rosversion: 1.12.12
