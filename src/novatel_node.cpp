@@ -106,6 +106,7 @@ std::string NovatelNode::file_xyh_fd_path = "";
 int NovatelNode::file_precision_flag = 0;
 std::string NovatelNode::file_precision_fd_path_ = "";
 string NovatelNode::path_temp_ = "/";
+std::ofstream NovatelNode::track_file_out_(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
 
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
