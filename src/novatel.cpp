@@ -1340,16 +1340,7 @@ void Novatel::ReadSerialPort()
                 string s;
                 s = (char *)buffer;
                 //s = p;
-                stringstream ss;
-                ss << s;
-                cout << "s is " << s << endl;
-                std::ofstream track_file_out_(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
-                if (!NovatelNode::track_file_out_.is_open())
-                {
-                    cout << "open path_temp_:" << NovatelNode::path_temp_ << " failed!!!" << endl;
-                }
-
-                NovatelNode::track_file_out_ << s << endl;
+                cout << s << endl;
             }
             // else
             // {
