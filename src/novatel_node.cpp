@@ -787,7 +787,7 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": file_precision_flag: " << file_precision_flag);
     CODE_STATE = file_precision_state;
     
-    log_commands_ = "inspvaxa ontime 0.1;bestposa ontime 0.1;inspvab ontime 0.1";
+    log_commands_ = "inspvaxa ontime 0.1; bestposa ontime 0.1; inspvab ontime 0.1";
     
     time(&current_time_);
     local_time_ = localtime(&current_time_);
