@@ -106,7 +106,7 @@ std::string NovatelNode::file_xyh_fd_path = "";
 int NovatelNode::file_precision_flag = 0;
 std::string NovatelNode::file_precision_fd_path_ = "";
 string NovatelNode::path_temp_ = "/";
-std::ofstream NovatelNode::track_file_out_(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
+std::ofstream NovatelNode::track_file_out_;
 
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
@@ -801,7 +801,7 @@ bool NovatelNode::getParameters()
     ROS_INFO_STREAM(name_ << ": file_precision_flag: " << file_precision_flag);
     CODE_STATE = file_precision_state;
     
-    log_commands_ = "inspvaxa ontime 1;bestposa ontime 1;";
+    log_commands_ = "inspvaxa ontime 1";
     
     time(&current_time_);
     local_time_ = localtime(&current_time_);
@@ -822,7 +822,7 @@ bool NovatelNode::getParameters()
                 << ".txt";
     cout << "ss is " << ss.str() << endl;
     path_temp_ = ss.str();
-    std::ofstream track_file_out_(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
+    track_file_out_.open(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
     if (!track_file_out_.is_open())
     {
       cout << "open path_temp_:" << path_temp_ << " failed!!!" << endl;
