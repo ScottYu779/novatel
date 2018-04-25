@@ -317,12 +317,12 @@ void NovatelNode::run()
       //config all the cmd setted in launch file
       if (log_commands_ != "")
       {
-        if ((log_commands_.find("inspvaxa",0) != string::npos) || 
-	    (log_commands_.find("bestposa",0) != string::npos) || 
-	    (log_commands_.find("bestposa",0) != string::npos))
-
+        if (((log_commands_.find("inspvaxa",0) != string::npos) || 
+            (log_commands_.find("bestposa",0) != string::npos) || 
+            (log_commands_.find("bestposa",0) != string::npos))
+            && ((team_debug_min_ <= CODE_STATE) && (CODE_STATE <= team_debug_max_)))
         {
-	  cout << "logs is " << log_commands_ << endl;
+	        cout << "logs is " << log_commands_ << endl;
           cout << "catched inspvaxa" << endl;
 
           time(&current_time_);
@@ -330,7 +330,7 @@ void NovatelNode::run()
           stringstream ss;
           system("mkdir -p ./log/data/drift_err/");
           ss << "./log/data/drift_err/"
-            << path_temp_1_ << local_time_->tm_year + 1900
+            << path_temp_2_ << local_time_->tm_year + 1900
             << setw(2) << setfill('0')
             << local_time_->tm_mon + 1
             << setw(2) << setfill('0')
@@ -342,12 +342,12 @@ void NovatelNode::run()
             << setw(2) << setfill('0')
             << local_time_->tm_sec
             << ".txt";
-          cout << "path_temp_1_ is " << ss.str() << endl;
-          path_temp_1_ = ss.str();
-          track_file_out_1_.open(NovatelNode::path_temp_1_.c_str(), ios::app | ios::out);
-          if (!track_file_out_1_.is_open())
+          cout << "path_temp_2_ is " << ss.str() << endl;
+          path_temp_2_ = ss.str();
+          track_file_out_2_.open(NovatelNode::path_temp_2_.c_str(), ios::app | ios::out);
+          if (!track_file_out_2_.is_open())
           {
-            cout << "open path_temp_1_:" << path_temp_1_ << " failed!!!" << endl;
+            cout << "open path_temp_2_:" << path_temp_2_ << " failed!!!" << endl;
           }
         }
         gps_.ConfigureLogs(log_commands_);
