@@ -42,7 +42,6 @@ This project provides a cross-platform interface for the Novatel OEM4 and OEMV s
 # usage for user
 ## run novatel_node
 cd ~/yuhs_ws
-catkin_make -DCATKIN_WHITELIST_PACKAGES="novatel"
 source ~/novatel_ws/devel/setup.bash
 roslaunch novatel novatel.launch
 
