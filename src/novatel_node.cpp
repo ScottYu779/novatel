@@ -315,6 +315,35 @@ void NovatelNode::run()
       //config all the cmd setted in launch file
       if (log_commands_ != "")
       {
+        if (log_commands_.find("inspvaxa",0) != string::npos)
+        {
+          cout << "catched inspvaxa" << endl;
+
+          time(&current_time_);
+          local_time_ = localtime(&current_time_);
+          stringstream ss;
+          system("mkdir -p ./log/data/drift_err/");
+          ss << "./log/data/drift_err/"
+            << path_temp_ << local_time_->tm_year + 1900
+            << setw(2) << setfill('0')
+            << local_time_->tm_mon + 1
+            << setw(2) << setfill('0')
+            << local_time_->tm_mday
+            << setw(2) << setfill('0')
+            << local_time_->tm_hour
+            << setw(2) << setfill('0')
+            << local_time_->tm_min
+            << setw(2) << setfill('0')
+            << local_time_->tm_sec
+            << ".txt";
+          cout << "path_temp_ is " << ss.str() << endl;
+          path_temp_ = ss.str();
+          track_file_out_.open(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
+          if (!track_file_out_.is_open())
+          {
+            cout << "open path_temp_:" << path_temp_ << " failed!!!" << endl;
+          }
+        }
         gps_.ConfigureLogs(log_commands_);
       }
 
