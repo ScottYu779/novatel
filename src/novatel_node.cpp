@@ -767,8 +767,8 @@ bool NovatelNode::getParameters()
   nh_.param("file_xyh_out_flag", file_xyh_flag_, 0);
   if (file_xyh_flag_ == 1)
   {
-    Novatel::x_zero -= -5.5692;
-    Novatel::y_zero -= 13.972;
+    Novatel::x_zero += -5.5692;
+    Novatel::y_zero += 13.972;
     ROS_INFO_STREAM(name_ << ": file_xyh_out_flag: " << file_xyh_flag_);
     CODE_STATE = file_xyh_state;
     log_commands_ = "inspvab ontime 0.1";
