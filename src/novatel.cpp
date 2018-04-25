@@ -1334,14 +1334,27 @@ void Novatel::ReadSerialPort()
                 (strstr((const char *)buffer, "BESTPOSA") != NULL) || 
                 (strstr((const char *)buffer, "INSPVAA") != NULL)))
             {
-		cout << "catched INSPVAXA" << endl;
+		        cout << "catched INSPVAXA" << endl;
                 string s;
                 s = (char *)buffer;
-                if (!NovatelNode::track_file_out_.is_open())
+                
+                if ((team_debug_min_ <= CODE_STATE) && (CODE_STATE <= team_debug_max_))
                 {
-                    cout << "open path_temp_:" << NovatelNode::path_temp_ << " failed!!!" << endl;
+                    if (!NovatelNode::track_file_out_2_.is_open())
+                    {
+                        cout << "open path_temp_2_:" << NovatelNode::path_temp_2_ << " failed!!!" << endl;
+                    }
+                    NovatelNode::track_file_out_2_ << s << endl;
                 }
-                NovatelNode::track_file_out_ << s << endl;
+                else
+                {
+                    if (!NovatelNode::track_file_out_1_.is_open())
+                    {
+                        cout << "open path_temp_1_:" << NovatelNode::path_temp_1_ << " failed!!!" << endl;
+                    }
+                    NovatelNode::track_file_out_1_ << s << endl;
+                }
+                
             }
             // else
             // {

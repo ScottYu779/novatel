@@ -104,8 +104,10 @@ int NovatelNode::file_xyh_flag_ = 0;
 std::string NovatelNode::file_xyh_fd_path = "";
 int NovatelNode::file_precision_flag_ = 0;
 std::string NovatelNode::file_precision_fd_path_ = "";
-string NovatelNode::path_temp_ = "";
-std::ofstream NovatelNode::track_file_out_;
+string NovatelNode::path_temp_1_ = "";
+string NovatelNode::path_temp_2_ = "";
+std::ofstream NovatelNode::track_file_out_1_;
+std::ofstream NovatelNode::track_file_out_2_;
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
 {
@@ -328,7 +330,7 @@ void NovatelNode::run()
           stringstream ss;
           system("mkdir -p ./log/data/drift_err/");
           ss << "./log/data/drift_err/"
-            << path_temp_ << local_time_->tm_year + 1900
+            << path_temp_1_ << local_time_->tm_year + 1900
             << setw(2) << setfill('0')
             << local_time_->tm_mon + 1
             << setw(2) << setfill('0')
@@ -340,12 +342,12 @@ void NovatelNode::run()
             << setw(2) << setfill('0')
             << local_time_->tm_sec
             << ".txt";
-          cout << "path_temp_ is " << ss.str() << endl;
-          path_temp_ = ss.str();
-          track_file_out_.open(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
-          if (!track_file_out_.is_open())
+          cout << "path_temp_1_ is " << ss.str() << endl;
+          path_temp_1_ = ss.str();
+          track_file_out_1_.open(NovatelNode::path_temp_1_.c_str(), ios::app | ios::out);
+          if (!track_file_out_1_.is_open())
           {
-            cout << "open path_temp_:" << path_temp_ << " failed!!!" << endl;
+            cout << "open path_temp_1_:" << path_temp_1_ << " failed!!!" << endl;
           }
         }
         gps_.ConfigureLogs(log_commands_);
@@ -495,12 +497,12 @@ void NovatelNode::BestUtmHandler(UtmPosition &pos, double &timestamp)
 
     //cost 5us
 
-    if (!track_file_out_.is_open())
+    if (!track_file_out_1_.is_open())
     {
       cout << "open fiile fail" << endl;
     }
     else
-      track_file_out_ << setprecision(2)
+      track_file_out_1_ << setprecision(2)
                       << track_point_cnt++ << " "
                       << gps_data_ht_.odom.pose.pose.position.x << " "
                       << gps_data_ht_.odom.pose.pose.position.y << " "
@@ -623,15 +625,15 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
     static int track_point_cnt = 0;
 
     //track_file_out.precision(5);
-    if (!track_file_out_.is_open())
+    if (!track_file_out_1_.is_open())
     {
-      cout << "open track_file_out_:" << path_temp_ << " failed!!!" << endl;
+      cout << "open track_file_out_1_:" << path_temp_1_ << " failed!!!" << endl;
     }
     else
     {
       if (CODE_STATE == file_precision_state)
       {
-        track_file_out_
+        track_file_out_1_
             << setprecision(11)
             << ins_pva.latitude << " "
             << setprecision(3)
@@ -645,7 +647,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
 
       if (CODE_STATE == file_xyh_state)
       {
-        track_file_out_
+        track_file_out_1_
             << setprecision(2)
             << track_point_cnt++ << " "
             << gps_data_ht_.odom.pose.pose.position.x << " "
@@ -653,7 +655,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << gps_data_ht_.heading << " "
             << endl;
       }
-      cout << "saving data file" << path_temp_.c_str() << endl;
+      cout << "saving data file" << path_temp_1_.c_str() << endl;
     }
   }
   std::cout << "["
@@ -810,7 +812,7 @@ bool NovatelNode::getParameters()
     stringstream ss;
     system("mkdir -p ./log/data/track/xyh/");
     ss << "./log/data/track/xyh/"
-       << path_temp_ << local_time_->tm_year + 1900
+       << path_temp_1_ << local_time_->tm_year + 1900
        << setw(2) << setfill('0')
        << local_time_->tm_mon + 1
        << setw(2) << setfill('0')
@@ -823,11 +825,11 @@ bool NovatelNode::getParameters()
        << local_time_->tm_sec
        << ".txt";
     cout << "ss is " << ss.str() << endl;
-    path_temp_ = ss.str();
-    track_file_out_.open(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
-    if (!track_file_out_.is_open())
+    path_temp_1_ = ss.str();
+    track_file_out_1_.open(NovatelNode::path_temp_1_.c_str(), ios::app | ios::out);
+    if (!track_file_out_1_.is_open())
     {
-      cout << "open path_temp_:" << path_temp_ << " failed!!!" << endl;
+      cout << "open path_temp_1_:" << path_temp_1_ << " failed!!!" << endl;
     }
   }
 
@@ -845,7 +847,7 @@ bool NovatelNode::getParameters()
     stringstream ss;
     system("mkdir -p ./log/data/precision/");
     ss << "./log/data/precision/"
-       << path_temp_ << local_time_->tm_year + 1900
+       << path_temp_1_ << local_time_->tm_year + 1900
        << setw(2) << setfill('0')
        << local_time_->tm_mon + 1
        << setw(2) << setfill('0')
@@ -858,11 +860,11 @@ bool NovatelNode::getParameters()
        << local_time_->tm_sec
        << ".txt";
     cout << "ss is " << ss.str() << endl;
-    path_temp_ = ss.str();
-    track_file_out_.open(NovatelNode::path_temp_.c_str(), ios::app | ios::out);
-    if (!track_file_out_.is_open())
+    path_temp_1_ = ss.str();
+    track_file_out_1_.open(NovatelNode::path_temp_1_.c_str(), ios::app | ios::out);
+    if (!track_file_out_1_.is_open())
     {
-      cout << "open path_temp_:" << path_temp_ << " failed!!!" << endl;
+      cout << "open path_temp_1_:" << path_temp_1_ << " failed!!!" << endl;
     }
   }
 

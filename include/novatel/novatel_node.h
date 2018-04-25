@@ -93,8 +93,10 @@ public://data
   struct timezone tz_;
   time_t current_time_;
   struct tm *local_time_;
-  static std::ofstream track_file_out_;
-  static string path_temp_;
+  static std::ofstream track_file_out_1_;
+  static std::ofstream track_file_out_2_;
+  static string path_temp_1_;
+  static string path_temp_2_;
 
 protected:
   void send_rest_locate_data_frq_func();
