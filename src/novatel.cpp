@@ -1334,6 +1334,7 @@ void Novatel::ReadSerialPort()
                 (strstr((const char *)buffer, "BESTPOSA") != NULL) || 
                 (strstr((const char *)buffer, "INSPVAA") != NULL)))
             {
+		        cout << "catched INSPVAXA" << endl;
                 string s;
                 s = (char *)buffer;
                 
