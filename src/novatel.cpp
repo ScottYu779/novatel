@@ -1358,7 +1358,7 @@ void Novatel::ReadSerialPort()
                                 << setw(2) << setfill('0')
                                 << NovatelNode::local_time_->tm_min
                                 << setw(2) << setfill('0')
-                                << NovatelNode::local_time_->tm_sec
+                                << NovatelNode::local_time_->tm_sec << ","
                                 << s << endl;
                 }
                 else
@@ -1378,7 +1378,7 @@ void Novatel::ReadSerialPort()
                                 << setw(2) << setfill('0')
                                 << NovatelNode::local_time_->tm_min
                                 << setw(2) << setfill('0')
-                                << NovatelNode::local_time_->tm_sec
+                                << NovatelNode::local_time_->tm_sec << ","
                                 << s << endl;
                 }
                 

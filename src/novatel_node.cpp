@@ -238,8 +238,8 @@ void NovatelNode::run()
   time(&current_time_);
   local_time_ = localtime(&current_time_);
   stringstream ss;
-  system("mkdir -p ./log/data/working/xyh/");
-  ss << "./log/data/working/xyh/"
+  system("mkdir -p ./log/data/working/");
+  ss << "./log/data/working/"
       << path_temp_1_ << local_time_->tm_year + 1900
       << setw(2) << setfill('0')
       << local_time_->tm_mon + 1
@@ -706,10 +706,11 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
             << setw(2) << setfill('0')
             << local_time_->tm_min
             << setw(2) << setfill('0')
-            << local_time_->tm_sec
+            << local_time_->tm_sec << " "
             << gps_data_ht_.odom.pose.pose.position.x << " "
             << gps_data_ht_.odom.pose.pose.position.y << " "
             << gps_data_ht_.heading << " "
+            << gps_data_ht_.velocity << " "
             << endl;
   }
   
