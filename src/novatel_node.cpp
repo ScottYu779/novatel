@@ -232,6 +232,33 @@ void NovatelNode::send_rest_locate_data_frq_func()
 
 void NovatelNode::run()
 {
+
+  time(&current_time_);
+  local_time_ = localtime(&current_time_);
+  stringstream ss;
+  system("mkdir -p ./log/data/working/xyh/");
+  ss << "./log/data/working/xyh/"
+      << path_temp_1_ << local_time_->tm_year + 1900
+      << setw(2) << setfill('0')
+      << local_time_->tm_mon + 1
+      << setw(2) << setfill('0')
+      << local_time_->tm_mday
+      << setw(2) << setfill('0')
+      << local_time_->tm_hour
+      << setw(2) << setfill('0')
+      << local_time_->tm_min
+      << setw(2) << setfill('0')
+      << local_time_->tm_sec
+      << ".txt";
+  cout << "ss is " << ss.str() << endl;
+  path_temp_1_ = ss.str();
+  track_file_out_1_.open(NovatelNode::path_temp_1_.c_str(), ios::app | ios::out);
+  if (!track_file_out_1_.is_open())
+  {
+    cout << "open path_temp_1_:" << path_temp_1_ << " failed!!!" << endl;
+  }
+
+
   if (!this->getParameters())
     return;
 
@@ -620,7 +647,7 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
   static int track_point_cnt = 0;
-  
+
   if ((test_file_io_min_ <= CODE_STATE) && (CODE_STATE <= test_file_io_max_))
   {
     string path_temp;
