@@ -619,10 +619,11 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   gps_data_ht_.odom.pose.pose.position.z = cur_odom_.pose.pose.position.z;
   exhibition_odom_publisher_.publish(gps_data_ht_);
 
+  static int track_point_cnt = 0;
+  
   if ((test_file_io_min_ <= CODE_STATE) && (CODE_STATE <= test_file_io_max_))
   {
     string path_temp;
-    static int track_point_cnt = 0;
 
     //track_file_out.precision(5);
     if (!track_file_out_1_.is_open())
