@@ -1344,7 +1344,19 @@ void Novatel::ReadSerialPort()
                     {
                         cout << "open path_temp_2_:" << NovatelNode::path_temp_2_ << " failed!!!" << endl;
                     }
-                    NovatelNode::track_file_out_2_ << s << endl;
+                    NovatelNode::track_file_out_2_ 
+                                << path_temp_2_ << local_time_->tm_year + 1900
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_mon + 1
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_mday
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_hour
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_min
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_sec
+                                << s << endl;
                 }
                 else
                 {
@@ -1352,7 +1364,19 @@ void Novatel::ReadSerialPort()
                     {
                         cout << "open path_temp_1_:" << NovatelNode::path_temp_1_ << " failed!!!" << endl;
                     }
-                    NovatelNode::track_file_out_1_ << s << endl;
+                    NovatelNode::track_file_out_1_ 
+                                << path_temp_2_ << local_time_->tm_year + 1900
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_mon + 1
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_mday
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_hour
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_min
+                                << setw(2) << setfill('0')
+                                << local_time_->tm_sec
+                                << s << endl;
                 }
                 
             }
