@@ -739,8 +739,8 @@ bool NovatelNode::getParameters()
     cout << "get x_zero and y_zero by longitude_zero and longitude_zero" << endl;
     gps_.ConvertLLaUTM(Novatel::latitude_zero, Novatel::longitude_zero, &Novatel::y_zero, &Novatel::x_zero,
                        &Novatel::zoneNum, &Novatel::north);
-    Novatel::x_zero -= -5.5692;
-    Novatel::y_zero -= 13.972;
+    Novatel::x_zero -= 5.5692;
+    Novatel::y_zero -= -13.972;
   }
 
   nh_.param("height_zero", Novatel::z_zero, 0.0);

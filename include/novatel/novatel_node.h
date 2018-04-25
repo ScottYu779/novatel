@@ -51,7 +51,7 @@ typedef enum
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = file_precision_state;
+int CODE_STATE  = team_debug_rtk_;
 
 
 
