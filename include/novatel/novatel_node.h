@@ -22,6 +22,7 @@ typedef enum
       team_debug_min_ = team_debug_on_car_,//范围控制边界
     debug_min_ = team_debug_min_,//范围控制边界
         team_debug_rtk_,
+        team_debug_rtk_drift_err_,
         team_debug_single_gps_device_,
       team_debug_max_ = team_debug_single_gps_device_,  //范围控制边界 解决基本代码是否有问题，是否能够联通gps设备，是否有数据上来的级别的bug
                                                         //如果出了代码级别问题，就把这个打开，日志的设定肯定能够帮助找到bug
@@ -51,7 +52,7 @@ typedef enum
 }Debug_state;//调试节奏是从下往上
 
 
-int CODE_STATE  = team_debug_rtk_;
+int CODE_STATE  = team_debug_rtk_drift_err_;
 
 
 
@@ -93,8 +94,10 @@ public://data
   struct timezone tz_;
   time_t current_time_;
   struct tm *local_time_;
-  static std::ofstream track_file_out_;
-  static string path_temp_;
+  static std::ofstream track_file_out_1_;
+  static std::ofstream track_file_out_2_;
+  static string path_temp_1_;
+  static string path_temp_2_;
 
 protected:
   void send_rest_locate_data_frq_func();
