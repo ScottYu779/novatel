@@ -92,8 +92,8 @@ public://data
   static std::string file_precision_fd_path_;
   struct timeval tv_;
   struct timezone tz_;
-  time_t current_time_;
-  struct tm *local_time_;
+  static time_t current_time_;
+  static struct tm *local_time_;
   static std::ofstream track_file_out_1_;
   static std::ofstream track_file_out_2_;
   static string path_temp_1_;

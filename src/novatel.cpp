@@ -1344,18 +1344,21 @@ void Novatel::ReadSerialPort()
                     {
                         cout << "open path_temp_2_:" << NovatelNode::path_temp_2_ << " failed!!!" << endl;
                     }
+                    time(&NovatelNode::current_time_);
+                    NovatelNode::local_time_ = localtime(&NovatelNode::current_time_);
+
                     NovatelNode::track_file_out_2_ 
-                                << path_temp_2_ << local_time_->tm_year + 1900
+                                << NovatelNode::local_time_->tm_year + 1900
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_mon + 1
+                                << NovatelNode::local_time_->tm_mon + 1
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_mday
+                                << NovatelNode::local_time_->tm_mday
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_hour
+                                << NovatelNode::local_time_->tm_hour
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_min
+                                << NovatelNode::local_time_->tm_min
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_sec
+                                << NovatelNode::local_time_->tm_sec
                                 << s << endl;
                 }
                 else
@@ -1365,17 +1368,17 @@ void Novatel::ReadSerialPort()
                         cout << "open path_temp_1_:" << NovatelNode::path_temp_1_ << " failed!!!" << endl;
                     }
                     NovatelNode::track_file_out_1_ 
-                                << path_temp_2_ << local_time_->tm_year + 1900
+                                << NovatelNode::local_time_->tm_year + 1900
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_mon + 1
+                                << NovatelNode::local_time_->tm_mon + 1
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_mday
+                                << NovatelNode::local_time_->tm_mday
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_hour
+                                << NovatelNode::local_time_->tm_hour
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_min
+                                << NovatelNode::local_time_->tm_min
                                 << setw(2) << setfill('0')
-                                << local_time_->tm_sec
+                                << NovatelNode::local_time_->tm_sec
                                 << s << endl;
                 }
                 

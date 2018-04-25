@@ -108,6 +108,8 @@ string NovatelNode::path_temp_1_ = "";
 string NovatelNode::path_temp_2_ = "";
 std::ofstream NovatelNode::track_file_out_1_;
 std::ofstream NovatelNode::track_file_out_2_;
+time_t NovatelNode::current_time_;
+tm *NovatelNode::local_time_;
 
 bool gps_init_data_exhibition_service_cb(msgs_ht::Gps_Init_Data_Ht::Request &req, msgs_ht::Gps_Init_Data_Ht::Response &res)
 {
@@ -690,9 +692,11 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
   if (CODE_STATE == team_debug_rtk_drift_err_)
   {
     cout << "saving data into file" << path_temp_1_.c_str() << "for working drift err" << endl;
+    time(&current_time_);
+    local_time_ = localtime(&current_time_);
     track_file_out_1_
             << setprecision(5)
-            << path_temp_2_ << local_time_->tm_year + 1900
+            << local_time_->tm_year + 1900
             << setw(2) << setfill('0')
             << local_time_->tm_mon + 1
             << setw(2) << setfill('0')
