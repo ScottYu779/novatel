@@ -315,8 +315,12 @@ void NovatelNode::run()
       //config all the cmd setted in launch file
       if (log_commands_ != "")
       {
-        if (log_commands_.find("inspvaxa",0) != string::npos)
+        if ((log_commands_.find("inspvaxa",0) != string::npos) || 
+	    (log_commands_.find("bestposa",0) != string::npos) || 
+	    (log_commands_.find("bestposa",0) != string::npos))
+
         {
+	  cout << "logs is " << log_commands_ << endl;
           cout << "catched inspvaxa" << endl;
 
           time(&current_time_);

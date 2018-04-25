@@ -1332,9 +1332,9 @@ void Novatel::ReadSerialPort()
             
             if (((strstr((const char *)buffer, "INSPVAXA") != NULL) || 
                 (strstr((const char *)buffer, "BESTPOSA") != NULL) || 
-                (strstr((const char *)buffer, "INSPVAA") != NULL))
-                && (CODE_STATE == file_precision_state))
+                (strstr((const char *)buffer, "INSPVAA") != NULL)))
             {
+		cout << "catched INSPVAXA" << endl;
                 string s;
                 s = (char *)buffer;
                 if (!NovatelNode::track_file_out_.is_open())
