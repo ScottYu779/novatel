@@ -27,7 +27,7 @@
 		<!-- <param name="track_file_output_path_xyv" value="/home/rlc/yuhs_ws/record_data/track_xyv_1.txt" /> -->
 		<param name="track_file_output_path_xy_hd" value="" />
 		<param name="file_xy_path" value="" />
-		<param name="file_xyh_out_flag" value="1" type="int"/>
+		<param name="file_xyh_out_flag" value="0" type="int"/>
 		<param name="file_precision_out_flag" value="0" type="int"/>
 		<param name="file_xyv_path" value="" />
 
