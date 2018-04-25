@@ -658,6 +658,20 @@ void NovatelNode::InsPvaHandler(InsPositionVelocityAttitude &ins_pva, double &ti
       cout << "saving data file" << path_temp_1_.c_str() << endl;
     }
   }
+
+  if (CODE_STATE == team_debug_rtk_drift_err_)
+  {
+    cout << "saving data into file" << path_temp_1_.c_str() << "for working drift err" << endl;
+    track_file_out_1_
+            << setprecision(5)
+            << track_point_cnt++ << " "
+            << gps_data_ht_.odom.pose.pose.position.x << " "
+            << gps_data_ht_.odom.pose.pose.position.y << " "
+            << gps_data_ht_.heading << " "
+            << endl;
+  }
+  
+
   std::cout << "["
             << local_time->tm_year + 1900 << "-"
             << local_time->tm_mon + 1 << "-"
